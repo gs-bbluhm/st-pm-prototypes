@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staircase AI Analysts · Gainsight</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+/* ============================================================
+   STAIRCASE AI ANALYSTS — Executive narrative site
+   Single file · Gainsight brand tokens · Inter
+============================================================ */
+:root{
+  --navy:#1B2A4A; --navy-dark:#141F38; --navy-soft:#26395f;
+  --coral:#E8573D; --coral-light:#FF7F66;
+  --teal:#00A5B5; --teal-light:#33C4D1;
+  --green:#00B050;
+  --gold:#F0A030;
+  --bg:#FFFFFF; --bg-warm:#FAFAF8; --surface:#F7F8FA;
+  --heading:#1B2A4A; --body:#3D4F5F; --muted:#6B7C8D; --subtle:#9AACBA;
+  --card-bg:#FFFFFF; --card-border:#E8ECF1;
+  --shadow:0 1px 3px rgba(27,42,74,0.04), 0 4px 16px rgba(27,42,74,0.07);
+  --shadow-hover:0 2px 8px rgba(27,42,74,0.08), 0 18px 44px rgba(27,42,74,0.13);
+  --radius:16px; --maxw:1100px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;color:var(--body);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px;}
+.eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--coral);margin-bottom:18px;}
+.eyebrow.teal{color:var(--teal);}
+.eyebrow.on-dark{color:var(--coral-light);}
+h2{font-size:clamp(28px,4vw,42px);font-weight:800;color:var(--heading);letter-spacing:-.02em;line-height:1.12;}
+.lead{font-size:clamp(17px,2vw,20px);color:var(--muted);max-width:700px;margin-top:18px;}
+
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);}
+.reveal.in{opacity:1;transform:none;}
+.reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}.reveal.d4{transition-delay:.32s}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none;}*{animation:none !important;}}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--card-border);}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800;color:var(--navy);letter-spacing:-.01em;font-size:15px;}
+.brand .mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#0369E9,#3D8BFF);flex:none;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 7px rgba(3,105,233,.35);}
+.brand .mark svg{width:18px;height:18px;}
+.brand .by{color:var(--subtle);font-weight:500;}
+.nav-links{display:flex;gap:26px;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;transition:color .2s;}
+.nav-links a:hover{color:var(--coral);}
+@media(max-width:760px){.nav-links{display:none;}}
+
+/* HERO */
+.hero{background:radial-gradient(1100px 520px at 78% -10%, rgba(0,165,181,.22), transparent 60%),radial-gradient(900px 480px at 8% 110%, rgba(232,87,61,.20), transparent 55%),linear-gradient(160deg,var(--navy) 0%,var(--navy-dark) 100%);color:#fff;overflow:hidden;}
+.hero .wrap{padding-top:92px;padding-bottom:100px;position:relative;}
+.hero-grid-lines{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:54px 54px;mask-image:radial-gradient(600px 400px at 70% 20%,#000,transparent 80%);pointer-events:none;}
+.hero h1{font-size:clamp(34px,5.4vw,60px);font-weight:900;line-height:1.05;letter-spacing:-.03em;max-width:14ch;color:#fff;position:relative;}
+.hero h1 .accent{background:linear-gradient(100deg,var(--coral-light),var(--teal-light));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.hero p{font-size:clamp(17px,2.1vw,21px);color:#C3D1E4;max-width:60ch;margin-top:26px;position:relative;}
+.hero-tag{display:inline-flex;align-items:center;gap:9px;font-size:13px;font-weight:600;letter-spacing:.04em;color:#C9D6E8;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);padding:8px 15px;border-radius:999px;margin-bottom:30px;position:relative;}
+.hero-tag .dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2.4s infinite;}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(0,176,80,.5)}70%{box-shadow:0 0 0 9px rgba(0,176,80,0)}100%{box-shadow:0 0 0 0 rgba(0,176,80,0)}}
+.hero-meta{display:flex;gap:32px;margin-top:46px;flex-wrap:wrap;position:relative;}
+.hero-meta .item{position:relative;padding-left:16px;}
+.hero-meta .item::before{content:"";position:absolute;left:0;top:4px;bottom:4px;width:3px;border-radius:2px;background:var(--coral);}
+.hero-meta .item:nth-child(2)::before{background:var(--green);}
+.hero-meta .item:nth-child(3)::before{background:var(--teal);}
+.hero-meta .k{font-size:14px;font-weight:700;color:#fff;}
+.hero-meta .v{font-size:13px;color:#8FA3BE;}
+
+.band{padding:96px 0;}
+.band.warm{background:var(--bg-warm);}
+.band.surface{background:var(--surface);}
+
+/* PROBLEM */
+.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:54px;align-items:center;margin-top:8px;}
+@media(max-width:820px){.problem-grid{grid-template-columns:1fr;gap:36px;}}
+.silos{display:flex;flex-direction:column;gap:14px;}
+.silo{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:15px 18px;box-shadow:var(--shadow);}
+.silo .ic{width:38px;height:38px;border-radius:9px;background:var(--surface);display:flex;align-items:center;justify-content:center;flex:none;}
+.silo .ic svg{width:19px;height:19px;}
+.silo .t{font-weight:700;color:var(--heading);font-size:15px;}
+.silo .s{font-size:13px;color:var(--muted);}
+.silo .lock{margin-left:auto;font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--coral);background:rgba(232,87,61,.09);padding:5px 9px;border-radius:6px;text-transform:uppercase;}
+
+/* INTELLIGENCE LAYER */
+.layer-band{background:linear-gradient(180deg,var(--navy) 0%,var(--navy-dark) 100%);color:#fff;padding:104px 0 110px;overflow:hidden;}
+.layer-band h2{color:#fff;}.layer-band .lead{color:#B9C7DC;}
+.diagram{margin-top:64px;}
+.flow{display:grid;grid-template-columns:1fr 1.15fr 1fr;align-items:stretch;position:relative;}
+@media(max-width:880px){.flow{grid-template-columns:1fr;gap:18px;}}
+.flow-col{display:flex;flex-direction:column;justify-content:center;gap:12px;}
+.flow-col .col-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7F94B2;text-align:center;margin-bottom:6px;}
+.node{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:11px;font-size:14px;font-weight:600;color:#E6EDF7;backdrop-filter:blur(4px);}
+.node .nic{width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;flex:none;}
+.node .nic svg{width:16px;height:16px;stroke:var(--teal-light);}
+.node.out .nic svg{stroke:var(--coral-light);}
+.core{position:relative;display:flex;align-items:center;justify-content:center;padding:14px;}
+.core-card{position:relative;width:100%;border-radius:18px;padding:30px 24px;text-align:center;background:linear-gradient(150deg,rgba(0,165,181,.20),rgba(232,87,61,.16));border:1px solid rgba(255,255,255,.22);box-shadow:0 0 0 1px rgba(255,255,255,.04),0 24px 60px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.18);}
+.core-card .ring{width:62px;height:62px;margin:0 auto 16px;border-radius:50%;background:radial-gradient(circle at 50% 40%,#fff,var(--teal-light));display:flex;align-items:center;justify-content:center;box-shadow:0 0 34px rgba(51,196,209,.6);animation:breathe 3.4s ease-in-out infinite;}
+@keyframes breathe{0%,100%{transform:scale(1);box-shadow:0 0 30px rgba(51,196,209,.45)}50%{transform:scale(1.06);box-shadow:0 0 46px rgba(51,196,209,.75)}}
+.core-card .ring svg{width:30px;height:30px;stroke:var(--navy);}
+.core-card .ttl{font-size:18px;font-weight:800;color:#fff;letter-spacing:-.01em;}
+.core-card .sub{font-size:13px;color:#CBd8ea;margin-top:6px;}
+.core-steps{display:flex;justify-content:center;gap:7px;margin-top:18px;flex-wrap:wrap;}
+.core-steps span{font-size:11px;font-weight:700;color:#fff;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);padding:5px 10px;border-radius:999px;}
+.connector{position:relative;}
+.connector svg{width:100%;height:100%;display:block;overflow:visible;}
+.dash{stroke:rgba(255,255,255,.18);stroke-width:1.6;fill:none;}
+.pulse{stroke:var(--teal-light);stroke-width:2.4;fill:none;stroke-linecap:round;stroke-dasharray:5 95;filter:drop-shadow(0 0 4px rgba(51,196,209,.9));animation:dashmove 2.6s linear infinite;}
+.pulse.out{stroke:var(--coral-light);filter:drop-shadow(0 0 4px rgba(255,127,102,.9));}
+@keyframes dashmove{to{stroke-dashoffset:-100;}}
+@media(max-width:880px){.connector{display:none;}}
+.payoff{text-align:center;margin-top:54px;font-size:clamp(17px,2.2vw,22px);font-weight:600;color:#fff;max-width:800px;margin-left:auto;margin-right:auto;line-height:1.45;}
+.payoff b{color:var(--teal-light);font-weight:800;}
+
+/* ============ ANATOMY: HOW AN ANALYST AGENT WORKS ============ */
+.anatomy-head{max-width:720px;}
+.stage-track{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:56px;position:relative;}
+@media(max-width:900px){.stage-track{grid-template-columns:repeat(2,1fr);gap:14px;}}
+@media(max-width:560px){.stage-track{grid-template-columns:1fr;}}
+.stage{position:relative;background:var(--card-bg);border:1px solid var(--card-border);border-radius:14px;padding:24px 20px 22px;box-shadow:var(--shadow);transition:transform .3s,box-shadow .3s;}
+.stage:hover{transform:translateY(-4px);box-shadow:var(--shadow-hover);}
+.stage .step{font-size:12px;font-weight:800;letter-spacing:.12em;color:var(--subtle);}
+.stage .verb{font-size:20px;font-weight:800;color:var(--heading);letter-spacing:-.01em;margin-top:4px;}
+.stage .agent-name{font-size:12.5px;font-weight:700;margin-top:3px;}
+.stage .desc{font-size:13.5px;color:var(--muted);margin-top:12px;line-height:1.5;}
+.stage .badge{position:absolute;top:-14px;left:20px;width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 6px 16px rgba(27,42,74,.18);}
+.stage .badge svg{width:21px;height:21px;stroke:#fff;}
+.stage.s1 .badge{background:linear-gradient(140deg,#C99700,var(--gold));} .stage.s1 .agent-name{color:#B07F12;}
+.stage.s2 .badge{background:linear-gradient(140deg,#2E6FD6,#54A0FF);} .stage.s2 .agent-name{color:#2E6FD6;}
+.stage.s3 .badge{background:linear-gradient(140deg,#C0432C,var(--coral));} .stage.s3 .agent-name{color:#C0432C;}
+.stage.s4 .badge{background:linear-gradient(140deg,#6B57D6,#8B7BE8);} .stage.s4 .agent-name{color:#6B57D6;}
+.stage::after{content:"";position:absolute;right:-12px;top:50%;width:14px;height:14px;border-top:2px solid var(--card-border);border-right:2px solid var(--card-border);transform:translateY(-50%) rotate(45deg);z-index:2;}
+.stage:last-child::after{display:none;}
+@media(max-width:900px){.stage::after{display:none;}}
+.stage .pad{height:14px;}
+/* memory rail */
+.memory{margin-top:22px;background:linear-gradient(135deg,var(--navy),var(--navy-soft));border-radius:16px;padding:26px 30px;color:#fff;display:flex;align-items:center;gap:24px;position:relative;overflow:hidden;box-shadow:var(--shadow);}
+.memory::before{content:"";position:absolute;right:-30px;top:-30px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(0,165,181,.3),transparent 70%);}
+.memory .mem-ic{width:54px;height:54px;border-radius:14px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;flex:none;position:relative;}
+.memory .mem-ic svg{width:26px;height:26px;stroke:var(--teal-light);}
+.memory .mem-txt{position:relative;}
+.memory .mem-txt .h{font-size:16px;font-weight:800;color:#fff;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.memory .mem-txt .h .loop{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);background:var(--teal-light);padding:4px 9px;border-radius:999px;}
+.memory .mem-txt .p{font-size:14px;color:#C3D1E4;margin-top:6px;max-width:78ch;}
+.memory .mem-txt .p b{color:#fff;font-weight:700;}
+.callout-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px;}
+@media(max-width:760px){.callout-row{grid-template-columns:1fr;}}
+.callout{display:flex;gap:13px;align-items:flex-start;background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:18px 18px;box-shadow:var(--shadow);}
+.callout .ci{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none;}
+.callout:nth-child(1) .ci{background:rgba(0,176,80,.10);} .callout:nth-child(2) .ci{background:rgba(0,165,181,.10);} .callout:nth-child(3) .ci{background:rgba(232,87,61,.10);}
+.callout .ci svg{width:18px;height:18px;}
+.callout .h{font-size:14.5px;font-weight:700;color:var(--heading);}
+.callout .p{font-size:13px;color:var(--muted);margin-top:2px;}
+
+/* ============ AGENTS ============ */
+.agents-intro{max-width:740px;}
+.agent{display:grid;grid-template-columns:310px 1fr;background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-top:28px;transition:box-shadow .35s,transform .35s;}
+.agent:hover{box-shadow:var(--shadow-hover);transform:translateY(-3px);}
+@media(max-width:840px){.agent{grid-template-columns:1fr;}}
+.agent-side{padding:32px 28px;color:#fff;position:relative;overflow:hidden;display:flex;flex-direction:column;gap:16px;}
+.agent.risk .agent-side{background:linear-gradient(160deg,#C0432C,#E8573D);}
+.agent.exp .agent-side{background:linear-gradient(160deg,#00863E,#00B050);}
+.agent.hand .agent-side{background:linear-gradient(160deg,#007E8A,#00A5B5);}
+.agent-side::after{content:"";position:absolute;right:-40px;bottom:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.10);}
+.agent-side .top{position:relative;z-index:1;}
+.agent-side .num{font-size:13px;font-weight:700;letter-spacing:.1em;opacity:.85;}
+.agent-side h3{font-size:25px;font-weight:800;letter-spacing:-.02em;margin-top:8px;line-height:1.1;}
+.agent-side .kind{font-size:12px;font-weight:600;font-style:italic;opacity:.9;margin-top:3px;}
+.agent-side .moment{font-size:13.5px;font-weight:600;opacity:.96;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.22);}
+.side-calls{position:relative;z-index:1;display:flex;flex-direction:column;gap:8px;margin-top:2px;}
+.side-calls .sc{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:600;color:#fff;}
+.side-calls .sc svg{width:15px;height:15px;stroke:#fff;flex:none;opacity:.95;}
+.agent-side .live{position:relative;z-index:1;display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.18);padding:6px 11px;border-radius:999px;align-self:flex-start;margin-top:auto;}
+.agent-side .live .dot{width:7px;height:7px;border-radius:50%;background:#fff;}
+.agent-body{padding:32px 32px;}
+.agent-body .what{font-size:16px;color:var(--body);font-weight:500;}
+.agent-body .what b{color:var(--heading);font-weight:700;}
+.sig-label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--subtle);margin:22px 0 11px;}
+.sigs{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{font-size:13px;font-weight:600;color:var(--body);background:var(--surface);border:1px solid var(--card-border);padding:7px 12px;border-radius:8px;}
+.agent.risk .chip{color:#A03A26;} .agent.exp .chip{color:#00753A;} .agent.hand .chip{color:#00727E;}
+.output{margin-top:22px;background:var(--surface);border:1px solid var(--card-border);border-radius:12px;padding:16px 18px;}
+.output .ol{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--subtle);margin-bottom:11px;display:flex;align-items:center;gap:8px;}
+.output .ol .basis{margin-left:auto;text-transform:none;letter-spacing:0;font-weight:600;color:var(--muted);font-size:11.5px;}
+.out-items{display:grid;grid-template-columns:1fr 1fr;gap:7px 18px;}
+@media(max-width:520px){.out-items{grid-template-columns:1fr;}}
+.out-items .oi{font-size:13.5px;color:var(--body);font-weight:600;display:flex;align-items:center;gap:9px;}
+.out-items .oi::before{content:"";width:6px;height:6px;border-radius:50%;flex:none;}
+.agent.risk .oi::before{background:var(--coral);} .agent.exp .oi::before{background:var(--green);} .agent.hand .oi::before{background:var(--teal);}
+.proof{margin-top:20px;border-left:3px solid var(--card-border);padding:4px 0 4px 16px;}
+.agent.risk .proof{border-color:var(--coral);} .agent.exp .proof{border-color:var(--green);} .agent.hand .proof{border-color:var(--teal);}
+.proof .q{font-size:14px;color:var(--body);font-style:italic;}
+.proof .src{font-size:12px;color:var(--muted);margin-top:5px;font-weight:600;}
+
+/* FUTURE ANALYSTS */
+.future-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px;}
+@media(max-width:760px){.future-grid{grid-template-columns:1fr;}}
+.future{background:var(--card-bg);border:1px dashed #C9D3DE;border-radius:14px;padding:24px 22px;position:relative;}
+.future .soon{position:absolute;top:16px;right:16px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--surface);border:1px solid var(--card-border);padding:4px 8px;border-radius:999px;}
+.future .fic{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
+.future:nth-child(1) .fic{background:rgba(220,53,69,.10);} .future:nth-child(2) .fic{background:rgba(240,160,48,.12);} .future:nth-child(3) .fic{background:rgba(108,92,231,.10);}
+.future .fic svg{width:20px;height:20px;}
+.future h4{font-size:17px;font-weight:800;color:var(--heading);letter-spacing:-.01em;}
+.future p{font-size:13.5px;color:var(--muted);margin-top:6px;}
+
+/* WHY DIFFERENT */
+.cat-line{background:var(--navy);color:#fff;border-radius:var(--radius);padding:38px 40px;margin-top:6px;position:relative;overflow:hidden;box-shadow:var(--shadow);}
+.cat-line::before{content:"";position:absolute;right:-30px;top:-30px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(0,165,181,.35),transparent 70%);}
+.cat-line .small{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--coral-light);position:relative;}
+.cat-line .big{font-size:clamp(19px,2.6vw,26px);font-weight:700;line-height:1.4;margin-top:14px;max-width:52ch;position:relative;}
+.cat-line .big b{color:var(--teal-light);}
+.compare{width:100%;border-collapse:separate;border-spacing:0;margin-top:30px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
+.compare th{background:var(--surface);text-align:left;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:15px 20px;}
+.compare td{padding:16px 20px;border-top:1px solid var(--card-border);font-size:14.5px;vertical-align:top;}
+.compare td.them{color:var(--muted);}
+.compare td.us{color:var(--heading);font-weight:600;}
+.compare td.us::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:9px;vertical-align:middle;}
+.compare tr:hover td{background:rgba(0,165,181,.03);}
+.compare .who{font-weight:700;color:var(--heading);}
+.compare .who span{display:block;font-weight:500;font-size:12px;color:var(--subtle);}
+@media(max-width:720px){.compare,.compare thead,.compare tbody,.compare th,.compare td,.compare tr{display:block;}.compare thead{display:none;}.compare td{border-top:none;}.compare tr{border-top:1px solid var(--card-border);padding:8px 0;}.compare td{padding:6px 20px;}}
+
+/* CLOSING */
+.closing{background:linear-gradient(160deg,var(--navy) 0%,var(--navy-dark) 100%);color:#fff;padding:104px 0;text-align:center;position:relative;overflow:hidden;}
+.closing::before{content:"";position:absolute;inset:0;background:radial-gradient(700px 360px at 50% -10%,rgba(0,165,181,.25),transparent 65%);}
+.closing h2{color:#fff;position:relative;max-width:18ch;margin:0 auto;}
+.closing .outcomes{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin-top:42px;position:relative;}
+.outcome{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:22px 26px;min-width:200px;}
+.outcome .ic{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;}
+.outcome:nth-child(1) .ic{background:rgba(232,87,61,.18);} .outcome:nth-child(2) .ic{background:rgba(0,176,80,.18);} .outcome:nth-child(3) .ic{background:rgba(0,165,181,.18);}
+.outcome .ic svg{width:20px;height:20px;}
+.outcome .h{font-weight:700;color:#fff;font-size:15px;}
+.outcome .p{font-size:13px;color:#A8B8CE;margin-top:5px;}
+
+footer{background:var(--navy-dark);color:#8298b6;padding:34px 0;font-size:13px;}
+footer .wrap{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;}
+footer .brand{color:#fff;}footer .brand .by{color:#6A849E;}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="wrap">
+    <div class="brand"><span class="mark"><svg viewBox="0 0 24 24" fill="#fff"><rect x="4" y="15" width="6.2" height="2.7" rx="1"/><rect x="9.1" y="11" width="6.2" height="2.7" rx="1"/><rect x="14.2" y="7" width="6.2" height="2.7" rx="1"/></svg></span>Analyst Agents <span class="by">by Gainsight</span></div>
+    <div class="nav-links">
+      <a href="#layer">The intelligence layer</a>
+      <a href="#anatomy">What's an agent</a>
+      <a href="#agents">The analysts</a>
+      <a href="#different">Why it's different</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-grid-lines"></div>
+  <div class="wrap">
+    <span class="hero-tag reveal"><span class="dot"></span>The AI Analysts, powered by Staircase</span>
+    <h1 class="reveal d1">The answers are already in your <span class="accent">customer conversations.</span></h1>
+    <p class="reveal d2">Staircase reads every email, call, meeting, and ticket automatically, turns it into living customer intelligence, and feeds it into the systems your teams already use. Every system gets smarter. Every customer interaction gets more personal.</p>
+    <div class="hero-meta reveal d3">
+      <div class="item"><div class="k">Protect revenue</div><div class="v">Risk Analyst</div></div>
+      <div class="item"><div class="k">Grow revenue</div><div class="v">Expansion Analyst</div></div>
+      <div class="item"><div class="k">Win the first 90 days</div><div class="v">Handoff Analyst</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- PROBLEM -->
+<section class="band warm">
+  <div class="wrap">
+    <span class="eyebrow reveal">The problem</span>
+    <h2 class="reveal d1">Your customer context exists. It's just trapped.</h2>
+    <div class="problem-grid">
+      <div><p class="lead reveal d2">Everything you'd need to know about a customer is already being said, every day, across inboxes, calls, and support queues. But no one can read all of it. So teams rebuild context by hand before every handoff and renewal, signals get missed until it's too late, and the relationship ends up feeling generic to the customer.</p></div>
+      <div class="silos">
+        <div class="silo reveal d2"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#E8573D" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span><div><div class="t">Email threads</div><div class="s">Buying signals buried in replies</div></div><span class="lock">Siloed</span></div>
+        <div class="silo reveal d3"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#00A5B5" stroke-width="2"><path d="M15 10l4.55-2.28A1 1 0 0 1 21 8.62v6.76a1 1 0 0 1-1.45.9L15 14"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg></span><div><div class="t">Calls &amp; meetings</div><div class="s">The "why they bought" lives here</div></div><span class="lock">Siloed</span></div>
+        <div class="silo reveal d3"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#00B050" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><div><div class="t">Chat &amp; tickets</div><div class="s">Friction and frustration signals</div></div><span class="lock">Siloed</span></div>
+        <div class="silo reveal d4"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#6B7C8D" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/></svg></span><div><div class="t">Your CRM</div><div class="s">Has the record, not the relationship</div></div><span class="lock">Stale</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTELLIGENCE LAYER -->
+<section class="layer-band" id="layer">
+  <div class="wrap">
+    <span class="eyebrow on-dark reveal">The intelligence layer</span>
+    <h2 class="reveal d1">One layer of customer intelligence, flowing everywhere.</h2>
+    <p class="lead reveal d2">Staircase reads every conversation and builds a single, continuously-updated understanding of each customer. Then it pushes that intelligence into the tools your teams already work in, so each one becomes more intelligent and more personalized to the specific account.</p>
+    <div class="diagram reveal d2">
+      <div class="flow">
+        <div class="flow-col">
+          <div class="col-label">Every conversation</div>
+          <div class="node"><span class="nic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>Email</div>
+          <div class="node"><span class="nic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M15 10l4.55-2.28A1 1 0 0 1 21 8.62v6.76a1 1 0 0 1-1.45.9L15 14"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg></span>Calls &amp; meetings</div>
+          <div class="node"><span class="nic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>Chat &amp; tickets</div>
+          <div class="node"><span class="nic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/></svg></span>CRM context</div>
+        </div>
+        <div class="flow-col core">
+          <div class="connector" style="position:absolute;left:-1px;width:34px;top:0;bottom:0;z-index:0">
+            <svg viewBox="0 0 34 320" preserveAspectRatio="none">
+              <path class="dash" d="M0 40 C 20 40, 20 160, 34 160"/><path class="dash" d="M0 120 C 20 120, 24 160, 34 160"/><path class="dash" d="M0 200 C 20 200, 24 160, 34 160"/><path class="dash" d="M0 280 C 20 280, 20 160, 34 160"/>
+              <path class="pulse" d="M0 40 C 20 40, 20 160, 34 160"/><path class="pulse" style="animation-delay:.6s" d="M0 120 C 20 120, 24 160, 34 160"/><path class="pulse" style="animation-delay:1.2s" d="M0 200 C 20 200, 24 160, 34 160"/><path class="pulse" style="animation-delay:1.8s" d="M0 280 C 20 280, 20 160, 34 160"/>
+            </svg>
+          </div>
+          <div class="core-card">
+            <div class="ring"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3 3 3 0 0 0-3 5 3 3 0 0 0 0 4 3 3 0 0 0 3 5 3 3 0 0 0 6 0 3 3 0 0 0 3-5 3 3 0 0 0 0-4 3 3 0 0 0-3-5 3 3 0 0 0-3-3Z"/><path d="M12 5v14M7 10h10M8 14h8"/></svg></div>
+            <div class="ttl">Staircase intelligence</div>
+            <div class="sub">Reads, understands, and remembers every customer relationship</div>
+            <div class="core-steps"><span>Learns</span><span>Detects</span><span>Recommends</span></div>
+          </div>
+          <div class="connector" style="position:absolute;right:-1px;width:34px;top:0;bottom:0;z-index:0">
+            <svg viewBox="0 0 34 320" preserveAspectRatio="none">
+              <path class="dash" d="M34 40 C 14 40, 14 160, 0 160"/><path class="dash" d="M34 120 C 14 120, 10 160, 0 160"/><path class="dash" d="M34 200 C 14 200, 10 160, 0 160"/><path class="dash" d="M34 280 C 14 280, 14 160, 0 160"/>
+              <path class="pulse out" d="M0 160 C 14 160, 14 40, 34 40"/><path class="pulse out" style="animation-delay:.5s" d="M0 160 C 10 160, 14 120, 34 120"/><path class="pulse out" style="animation-delay:1.1s" d="M0 160 C 10 160, 14 200, 34 200"/><path class="pulse out" style="animation-delay:1.7s" d="M0 160 C 14 160, 14 280, 34 280"/>
+            </svg>
+          </div>
+        </div>
+        <div class="flow-col">
+          <div class="col-label">Delivered into every system</div>
+          <div class="node out"><span class="nic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linejoin="round"><path d="M12 3l1.7 5.6L19 10l-5.3 1.4L12 17l-1.7-5.6L5 10l5.3-1.4z"/><path d="M19 15l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></svg></span>MCP &rarr; Claude &amp; LLMs</div>
+          <div class="node out"><span class="nic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/></svg></span>Your CRM</div>
+          <div class="node out"><span class="nic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg></span>CS platform</div>
+          <div class="node out"><span class="nic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg></span>Webhooks &amp; notifications</div>
+        </div>
+      </div>
+    </div>
+    <p class="payoff reveal d2">The result: your teams stop hunting for context and start acting on it. The relationship feels personal because <b>every system finally knows the customer.</b></p>
+  </div>
+</section>
+
+<!-- ANATOMY: HOW AN ANALYST AGENT WORKS -->
+<section class="band surface" id="anatomy">
+  <div class="wrap">
+    <span class="eyebrow teal reveal">What is an Analyst Agent</span>
+    <h2 class="reveal d1 anatomy-head">Agents that curate exactly the context you need to act.</h2>
+    <p class="lead reveal d2 anatomy-head">An Analyst Agent is a team of specialized AI with one job: to continuously curate the ideal picture of each customer. Where they are, what they need right now, and the move that works, kept current as the relationship changes and ready before your team even asks.</p>
+
+    <div class="stage-track reveal d2">
+      <div class="stage s1">
+        <div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+        <div class="pad"></div>
+        <div class="step">01 · LEARNS</div>
+        <div class="verb">Experience Curator</div>
+        <div class="agent-name">Studies your history</div>
+        <div class="desc">Reads your past wins, saves, and losses and the moves your team made, then distills them into a reusable Experience Library.</div>
+      </div>
+      <div class="stage s2">
+        <div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2a10 10 0 0 1 10 10M12 6a6 6 0 0 1 6 6"/></svg></div>
+        <div class="pad"></div>
+        <div class="step">02 · WATCHES</div>
+        <div class="verb">Signal Scout</div>
+        <div class="agent-name">Scans live conversations</div>
+        <div class="desc">Continuously reads every email, call, ticket, and chat to detect the signals that matter, understanding context, not keywords.</div>
+      </div>
+      <div class="stage s3">
+        <div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9zM9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/></svg></div>
+        <div class="pad"></div>
+        <div class="step">03 · THINKS</div>
+        <div class="verb">The Analyst</div>
+        <div class="agent-name">Synthesizes the picture</div>
+        <div class="desc">Combines what it sees right now with what it has learned to produce an evidence-backed assessment, with the reasons behind it.</div>
+      </div>
+      <div class="stage s4">
+        <div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg></div>
+        <div class="pad"></div>
+        <div class="step">04 · RECOMMENDS</div>
+        <div class="verb">Playbook Creator</div>
+        <div class="agent-name">Turns insight into action</div>
+        <div class="desc">Builds a specific, prioritized playbook, personalized from what actually worked on similar accounts before, with owners and timelines.</div>
+      </div>
+    </div>
+
+    <div class="memory reveal d2">
+      <div class="mem-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></svg></div>
+      <div class="mem-txt">
+        <div class="h">The Experience Library <span class="loop">↺ Feedback loop</span></div>
+        <div class="p">The agent's memory. Every outcome, a save, a win, a churn, a successful handoff, feeds back into the library, so the analysts spot patterns earlier and tailor recommendations to <b>your business and your team's best practices</b>, getting sharper every quarter.</div>
+      </div>
+    </div>
+
+    <div class="callout-row">
+      <div class="callout reveal d2"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#00B050" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg></span><div><div class="h">Learns from your team's best work</div><div class="p">It codifies what your top performers actually do, not generic rules.</div></div></div>
+      <div class="callout reveal d3"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#00A5B5" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13l2 2 4-4"/></svg></span><div><div class="h">Every insight cites real evidence</div><div class="p">It points to the actual quote and who said it, so it can't invent a finding.</div></div></div>
+      <div class="callout reveal d4"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#E8573D" stroke-width="2"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg></span><div><div class="h">Gets smarter every quarter</div><div class="p">The more outcomes it sees, the earlier and more accurately it acts.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- AGENTS -->
+<section class="band" id="agents">
+  <div class="wrap">
+    <span class="eyebrow reveal">The analysts</span>
+    <h2 class="reveal d1">Agents always focused on the moments that move revenue.</h2>
+    <p class="lead agents-intro reveal d2">It would already be there, delivered into the tools they work in the moment it matters, so they act immediately and personally on what each customer needs right now. Three analysts, each pointed at a moment that moves revenue.</p>
+
+    <!-- RISK -->
+    <article class="agent risk reveal d2">
+      <div class="agent-side">
+        <div class="top"><div class="num">01 · INSIGHT AGENT</div><h3>Risk Analyst</h3><div class="kind">Protect revenue</div>
+          <div class="moment">When a relationship starts slipping</div></div>
+        <div class="side-calls">
+          <div class="sc"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></svg>Detect early churn signals</div>
+          <div class="sc"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>Prioritize at-risk accounts</div>
+          <div class="sc"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>Follow proven save strategies</div>
+        </div>
+        <span class="live"><span class="dot"></span>Live</span>
+      </div>
+      <div class="agent-body">
+        <p class="what">Detects churn risk <b>early</b>, from what customers are actually saying, scores how serious it is, explains every reason with the quote behind it, and hands CS a personalized save playbook. No guesswork, no false alarms.</p>
+        <div class="sig-label">Signals it reads</div>
+        <div class="sigs"><span class="chip">Competitive pressure</span><span class="chip">Product friction</span><span class="chip">Value &amp; ROI doubt</span><span class="chip">Champion departure</span><span class="chip">Service breakdowns</span><span class="chip">Slipping engagement</span></div>
+        <div class="output">
+          <div class="ol">The Risk Synopsis</div>
+          <div class="out-items"><span class="oi">Risk severity (1-5) + trajectory</span><span class="oi">Risk reasons with evidence</span><span class="oi">Mitigation playbook (owner + timeline)</span><span class="oi">Stakeholders involved</span></div>
+        </div>
+        <div class="proof"><div class="q">Risk 2/5 and escalating. Health still reads 91, but sentiment has dropped to 34 and an executive is quietly evaluating alternatives.</div><div class="src">Caught months before the renewal conversation, with the playbook to save it</div></div>
+      </div>
+    </article>
+
+    <!-- EXPANSION -->
+    <article class="agent exp reveal d2">
+      <div class="agent-side">
+        <div class="top"><div class="num">02 · INSIGHT AGENT</div><h3>Expansion Analyst</h3><div class="kind">Grow revenue</div>
+          <div class="moment">When a relationship is ready to grow</div></div>
+        <div class="side-calls">
+          <div class="sc"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>Uncover unknown opportunities</div>
+          <div class="sc"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Track &amp; win open expansions</div>
+          <div class="sc"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>Follow your team's best practices</div>
+        </div>
+        <span class="live"><span class="dot"></span>Live</span>
+      </div>
+      <div class="agent-body">
+        <p class="what">Listens for the conversations where customers show <b>interest in new products, features, and use cases</b>, then builds a rich, per-opportunity profile for each account and scores how ready it is to grow. No more finding out about the deal on the renewal call.</p>
+        <div class="sig-label">Conversations it detects</div>
+        <div class="sigs"><span class="chip">Interest in new products</span><span class="chip">Questions about features they don't have</span><span class="chip">New teams &amp; departments engaging</span><span class="chip">New stakeholders</span><span class="chip">Competitive mentions</span></div>
+        <div class="output">
+          <div class="ol">Per-opportunity detail it builds for each account</div>
+          <div class="out-items"><span class="oi">Expansion readiness (1-5)</span><span class="oi">Budget &amp; timeline</span><span class="oi">Momentum &amp; executive engagement</span><span class="oi">Competitive mentions</span><span class="oi">Technical status</span><span class="oi">References, quotes &amp; next steps</span></div>
+        </div>
+        <div class="proof"><div class="q">"I love all of it."</div><div class="src">PowerSchool, on seeing their accounts ranked by expansion readiness with the evidence behind each one</div></div>
+      </div>
+    </article>
+
+    <!-- HANDOFF -->
+    <article class="agent hand reveal d2">
+      <div class="agent-side">
+        <div class="top"><div class="num">03 · INSIGHT AGENT</div><h3>Handoff Analyst</h3><div class="kind">Transfer the relationship</div>
+          <div class="moment">When Sales hands a new customer to Onboarding</div></div>
+        <div class="side-calls">
+          <div class="sc"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>Capture the full pre-sales story</div>
+          <div class="sc"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Start onboarding with zero cold-start</div>
+          <div class="sc"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>Honor what Sales promised</div>
+        </div>
+        <span class="live"><span class="dot"></span>Live</span>
+      </div>
+      <div class="agent-body">
+        <p class="what">When a new customer is handed from Sales to Onboarding, it reads the <b>entire pre-sales conversation history</b> and builds a complete handoff brief: why they bought, what success looks like, what was promised, and exactly who matters. The first onboarding call starts fully informed.</p>
+        <div class="sig-label">What the brief covers</div>
+        <div class="sigs"><span class="chip">Main driver &amp; urgency</span><span class="chip">Goals with metrics &amp; timelines</span><span class="chip">Decision pains</span><span class="chip">Why they chose us</span><span class="chip">Open concerns</span><span class="chip">Commitments made</span><span class="chip">Onboarding readiness</span></div>
+        <div class="output">
+          <div class="ol">Delivered to onboarding<span class="basis">e.g. generated from 131 pre-sales emails</span></div>
+          <div class="out-items"><span class="oi">Key stakeholders (Champion, Economic Buyer)</span><span class="oi">Each contact's stance &amp; priorities</span><span class="oi">Integration &amp; readiness gaps</span><span class="oi">Prioritized hand-off actions</span></div>
+        </div>
+        <div class="proof"><div class="q">Gates Systems · built from 131 pre-sales emails: surfaced the customer's 15-20% engagement goal, the VIP-support commitment Sales made, the open feature request, and the champion to call first.</div><div class="src">3-5 hours of manual context-gathering, delivered automatically before day one</div></div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- FUTURE ANALYSTS -->
+<section class="band warm">
+  <div class="wrap">
+    <span class="eyebrow reveal">On the roadmap</span>
+    <h2 class="reveal d1">The same engine, pointed at more of the journey.</h2>
+    <p class="lead reveal d2">More analysts are on the way, each curating context for another moment that decides whether revenue stays, grows, or slips away, and each one arrives already knowing how to learn from your team.</p>
+    <div class="future-grid">
+      <div class="future reveal d2"><span class="soon">Coming</span><span class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="#DC3545" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 7-6 6-4-4-5 5"/></svg></span><h4>Churn Analyst</h4><p>Learns from every loss, reconstructs why it happened, and feeds the lesson back so the next one is caught earlier.</p></div>
+      <div class="future reveal d3"><span class="soon">Coming</span><span class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="#F0A030" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><h4>Value Analyst</h4><p>Tracks the value delivered against what the customer set out to achieve, so renewals are grounded in proof.</p></div>
+      <div class="future reveal d4"><span class="soon">Coming</span><span class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="#6C5CE7" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span><h4>Adoption Analyst</h4><p>Spots where adoption is stalling and recommends the play that drove usage on similar accounts.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY DIFFERENT -->
+<section class="band surface" id="different">
+  <div class="wrap">
+    <span class="eyebrow teal reveal">Why it's different</span>
+    <h2 class="reveal d1">Not another score in another dashboard.</h2>
+    <div class="cat-line reveal d2">
+      <div class="small">The category difference</div>
+      <div class="big">Other tools give you a number in one place. Staircase generates <b>living customer intelligence</b> and pushes it into every system, so your whole stack gets smarter, and it learns from your wins and losses so it sharpens every quarter.</div>
+    </div>
+    <table class="compare reveal d2">
+      <thead><tr><th>The usual approach</th><th>What they give you</th><th>What Staircase does</th></tr></thead>
+      <tbody>
+        <tr><td class="who">Health scores<span>rule-based platforms</span></td><td class="them">Static rules and thresholds</td><td class="us">AI discovers unknown patterns and learns from your outcomes</td></tr>
+        <tr><td class="who">Conversation intelligence<span>call-recording tools</span></td><td class="them">Call recordings only</td><td class="us">Full relationship context across every channel</td></tr>
+        <tr><td class="who">Opportunity logging<span>manual CS tools</span></td><td class="them">Someone has to log it</td><td class="us">Automatic, always-on signal detection</td></tr>
+        <tr><td class="who">Usage scoring<span>adoption trackers</span></td><td class="them">Product usage only</td><td class="us">Communication, usage, and sentiment, fused</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section class="closing">
+  <div class="wrap">
+    <span class="eyebrow on-dark reveal">The outcome</span>
+    <h2 class="reveal d1">Customer intelligence that protects, grows, and personalizes every relationship.</h2>
+    <div class="outcomes">
+      <div class="outcome reveal d2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#FF7F66" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg></div><div class="h">Revenue protected</div><div class="p">Churn caught while you can still act</div></div>
+      <div class="outcome reveal d3"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#00B050" stroke-width="2"><path d="M3 17l6-6 4 4 8-8"/><path d="M21 7v6h-6"/></svg></div><div class="h">Revenue grown</div><div class="p">Expansion captured, not missed</div></div>
+      <div class="outcome reveal d4"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#33C4D1" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13A4 4 0 0 1 16 11"/></svg></div><div class="h">Relationships personalized</div><div class="p">Customers known from day one</div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="brand"><span class="mark"><svg viewBox="0 0 24 24" fill="#fff"><rect x="4" y="15" width="6.2" height="2.7" rx="1"/><rect x="9.1" y="11" width="6.2" height="2.7" rx="1"/><rect x="14.2" y="7" width="6.2" height="2.7" rx="1"/></svg></span>Analyst Agents <span class="by">by Gainsight</span></div>
+    <div>Account intelligence for B2B SaaS, built from the conversations you already have.</div>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:0.1, rootMargin:'0px 0px -6% 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

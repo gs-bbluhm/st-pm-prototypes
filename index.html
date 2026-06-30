@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ST PM Prototypes</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+:root{--navy:#1B2A4A;--navy-dark:#141F38;--coral:#E8573D;--coral-light:#FF7F66;--teal:#00A5B5;--blue:#0369E9;--card-border:#E8ECF1;--muted:#6B7C8D;--subtle:#9AACBA;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',system-ui,sans-serif;color:#3D4F5F;background:#FAFAF8;-webkit-font-smoothing:antialiased;min-height:100vh;}
+.hero{background:radial-gradient(900px 460px at 80% -10%,rgba(0,165,181,.22),transparent 60%),radial-gradient(700px 420px at 5% 110%,rgba(232,87,61,.18),transparent 55%),linear-gradient(160deg,var(--navy),var(--navy-dark));color:#fff;padding:64px 0 72px;}
+.wrap{max-width:980px;margin:0 auto;padding:0 28px;}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:15px;color:#fff;}
+.brand .mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--blue),#3D8BFF);display:flex;align-items:center;justify-content:center;flex:none;box-shadow:0 2px 7px rgba(3,105,233,.4);}
+.brand .mark svg{width:18px;height:18px;}
+.brand .by{color:#9BB0CC;font-weight:500;}
+.hero h1{font-size:clamp(30px,5vw,46px);font-weight:900;letter-spacing:-.03em;line-height:1.08;margin-top:34px;max-width:18ch;}
+.hero p{color:#C3D1E4;font-size:clamp(16px,2vw,19px);margin-top:18px;max-width:60ch;}
+.grid{max-width:980px;margin:-36px auto 0;padding:0 28px 80px;display:grid;grid-template-columns:1fr;gap:18px;}
+.card{display:block;background:#fff;border:1px solid var(--card-border);border-radius:16px;padding:26px 28px;text-decoration:none;color:inherit;box-shadow:0 1px 3px rgba(27,42,74,.04),0 6px 20px rgba(27,42,74,.07);transition:transform .3s,box-shadow .3s;position:relative;overflow:hidden;}
+.card:hover{transform:translateY(-4px);box-shadow:0 2px 8px rgba(27,42,74,.08),0 20px 46px rgba(27,42,74,.14);}
+.card::after{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(var(--coral),var(--teal));}
+.card .tag{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);}
+.card .tag .dot{width:7px;height:7px;border-radius:50%;background:#00B050;}
+.card h2{font-size:21px;font-weight:800;color:var(--navy);letter-spacing:-.01em;margin-top:10px;}
+.card p{color:var(--muted);font-size:14.5px;margin-top:8px;max-width:70ch;}
+.card .go{margin-top:16px;font-size:14px;font-weight:700;color:var(--coral);display:flex;align-items:center;gap:7px;}
+footer{text-align:center;color:var(--subtle);font-size:13px;padding:0 0 48px;}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="brand"><span class="mark"><svg viewBox="0 0 24 24" fill="#fff"><rect x="4" y="15" width="6.2" height="2.7" rx="1"/><rect x="9.1" y="11" width="6.2" height="2.7" rx="1"/><rect x="14.2" y="7" width="6.2" height="2.7" rx="1"/></svg></span>ST PM Prototypes <span class="by">by Gainsight</span></div>
+    <h1>Product prototypes &amp; executive narratives.</h1>
+    <p>A home for shareable Staircase product stories, demos, and prototype explorations.</p>
+  </div>
+</header>
+<main class="grid">
+  <a class="card" href="prototypes/staircase-agents-overview/">
+    <span class="tag"><span class="dot"></span>Live</span>
+    <h2>Analyst Agents by Gainsight</h2>
+    <p>The executive narrative: how Staircase turns every customer conversation into living intelligence, and the AI Analysts (Risk, Expansion, Handoff) that act on it.</p>
+    <span class="go">View the site &rarr;</span>
+  </a>
+</main>
+<footer>Staircase AI, a Gainsight company</footer>
+</body>
+</html>
