@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.classList.add('js')</script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Value of Staircase</title>
+<meta name="description" content="What Staircase adds, where the value comes from, and how it shows up in the tools you already run." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4F3FA;
+    --surface:#FFFFFF;
+    --recess:#ECE9F6;
+    --ink:#171331;
+    --ink-soft:#4C476A;
+    --ink-faint:#6A6586;
+    --violet:#5A32E6;
+    --violet-deep:#2C1878;
+    --signal:#0FA79A;
+    --amber:#C9761A;
+    --line:rgba(23,19,49,0.12);
+    --line-strong:rgba(23,19,49,0.22);
+    --chapter:#1A1147;
+    --chapter-2:#241760;
+    --chapter-ink:#EFEBFF;
+    --chapter-soft:#B7ACE6;
+    --chapter-accent:#B9A5FF;
+    --chapter-line:rgba(255,255,255,0.14);
+    --shadow:0 1px 2px rgba(23,19,49,.05), 0 12px 34px -18px rgba(44,24,120,.28);
+    --maxw:1160px;
+    --gut:clamp(20px,5vw,64px);
+    --font-display:"Fraunces",Georgia,serif;
+    --font-body:"Inter",system-ui,sans-serif;
+    --font-mono:"IBM Plex Mono",ui-monospace,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#0E0A20;
+      --surface:#1B1442;
+      --recess:#241A52;
+      --ink:#ECE9F8;
+      --ink-soft:#B3ACD0;
+      --ink-faint:#847DA6;
+      --violet:#9E82FF;
+      --violet-deep:#C9BAFF;
+      --signal:#2DD4BF;
+      --amber:#E5A24E;
+      --line:rgba(255,255,255,0.15);
+      --line-strong:rgba(255,255,255,0.28);
+      --chapter:#0A0718;
+      --chapter-2:#191045;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 18px 40px -20px rgba(0,0,0,.7);
+    }
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--font-body);font-size:17px;line-height:1.62;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{font-family:var(--font-display);font-weight:500;line-height:1.06;letter-spacing:-.012em;margin:0}
+  p{margin:0}
+  a{color:inherit}
+  ::selection{background:var(--violet);color:#fff}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding-inline:var(--gut)}
+  .eyebrow{font-family:var(--font-mono);font-size:12px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:var(--violet)}
+
+  /* ---------- NAV ---------- */
+  .nav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--paper) 86%,transparent);
+    backdrop-filter:saturate(140%) blur(12px);border-bottom:1px solid var(--line)}
+  .nav-in{max-width:var(--maxw);margin:0 auto;padding:14px var(--gut);display:flex;align-items:center;gap:24px}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600;letter-spacing:-.01em;font-size:16px;color:var(--ink)}
+  .brand .glyph{width:22px;height:22px;flex:0 0 auto}
+  .brand small{display:block;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);font-weight:400;margin-top:1px}
+  .nav-links{display:flex;gap:4px;margin-left:auto;align-items:center}
+  .nav-links a{text-decoration:none;font-size:14px;color:var(--ink-soft);padding:7px 12px;border-radius:8px;position:relative;font-weight:500;transition:color .18s,background .18s}
+  .nav-links a:hover{color:var(--ink);background:var(--recess)}
+  .nav-links a.active{color:var(--violet)}
+  .nav-cta{font-size:14px;text-decoration:none;font-weight:600;color:var(--ink);border:1px solid var(--line-strong);padding:8px 16px;border-radius:999px;margin-left:10px;white-space:nowrap;transition:border-color .18s,background .18s,color .18s}
+  .nav-cta:hover{border-color:var(--violet);color:var(--violet)}
+  .nav-toggle{display:none;margin-left:auto;background:none;border:1px solid var(--line-strong);border-radius:9px;padding:8px 10px;color:var(--ink);cursor:pointer;font-family:var(--font-mono);font-size:12px;letter-spacing:.12em}
+  a:focus-visible,button:focus-visible{outline:2.5px solid var(--violet);outline-offset:3px;border-radius:6px}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:clamp(56px,9vw,104px) 0 clamp(40px,6vw,64px);position:relative}
+  .hero .eyebrow{margin-bottom:22px}
+  .hero h1{font-size:clamp(38px,6.6vw,80px);max-width:16ch;letter-spacing:-.02em}
+  .hero h1 em{font-style:italic;font-weight:400;color:var(--violet)}
+  .hero-lede{margin-top:28px;max-width:60ch;font-size:clamp(18px,2.2vw,22px);line-height:1.55;color:var(--ink-soft)}
+  .hero-lede b{color:var(--ink);font-weight:600}
+
+  /* signal readout signature */
+  .readout{margin-top:clamp(38px,6vw,64px);border:1px solid var(--line);border-radius:20px;background:var(--surface);box-shadow:var(--shadow);overflow:hidden}
+  .readout-head{display:flex;align-items:center;gap:14px;padding:16px 22px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .readout-head .live{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--signal)}
+  .readout-head .live .dot{width:8px;height:8px;border-radius:50%;background:var(--signal);box-shadow:0 0 0 0 color-mix(in srgb,var(--signal) 70%,transparent);animation:pulse 2.4s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--signal) 55%,transparent)}70%{box-shadow:0 0 0 9px transparent}100%{box-shadow:0 0 0 0 transparent}}
+  @media (prefers-reduced-motion: reduce){.readout-head .live .dot{animation:none}}
+  .readout-head .label{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint)}
+  .readout-head .chip{margin-left:auto;font-family:var(--font-mono);font-size:11px;color:var(--ink-faint);border:1px solid var(--line);border-radius:999px;padding:4px 11px}
+  .readout-svg{display:block;width:100%;height:auto}
+  .channels{display:flex;flex-wrap:wrap;gap:0;border-top:1px solid var(--line)}
+  .channels .ch{flex:1 1 0;min-width:120px;padding:14px 18px;font-family:var(--font-mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);border-right:1px solid var(--line);display:flex;align-items:center;gap:9px}
+  .channels .ch:last-child{border-right:none}
+  .channels .ch svg{width:15px;height:15px;color:var(--violet);flex:0 0 auto}
+  @media (max-width:640px){.channels .ch{flex:1 1 40%;border-bottom:1px solid var(--line)}.readout-svg{height:120px}}
+
+  /* ---------- SECTION SCAFFOLD ---------- */
+  section{padding:clamp(64px,9vw,116px) 0;position:relative}
+  .sec-head{max-width:64ch}
+  .sec-head .eyebrow{display:block;margin-bottom:18px}
+  .sec-head h2{font-size:clamp(30px,4.6vw,52px)}
+  .sec-head .kicker{margin-top:20px;font-size:19px;color:var(--ink-soft);max-width:58ch}
+  .rule{height:1px;background:var(--line);border:0;margin:0}
+
+  /* day one outputs */
+  .outputs{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;margin-top:52px;background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+  @media (max-width:1000px){.outputs{grid-template-columns:repeat(2,1fr)}.outputs .out:last-child{grid-column:span 2}}
+  @media (max-width:560px){.outputs{grid-template-columns:1fr}.outputs .out:last-child{grid-column:auto}}
+  .out{background:var(--surface);padding:26px 24px 30px;display:flex;flex-direction:column;gap:10px}
+  .out .n{font-family:var(--font-mono);font-size:12px;color:var(--ink-faint);letter-spacing:.1em}
+  .out h3{font-family:var(--font-display);font-size:22px;font-weight:600}
+  .out p{font-size:14.5px;color:var(--ink-soft);line-height:1.5}
+  .out .ic{width:26px;height:26px;color:var(--violet)}
+  .standing{margin-top:40px;display:flex;gap:22px;align-items:flex-start;border-left:3px solid var(--violet);padding:6px 0 6px 26px}
+  .standing p{font-family:var(--font-display);font-size:clamp(21px,2.7vw,30px);font-weight:500;line-height:1.28;letter-spacing:-.01em;max-width:32ch}
+  .standing b{color:var(--violet);font-weight:600}
+
+  /* ---------- PILLARS ---------- */
+  .pillars-intro .eyebrow{margin-bottom:16px;display:block}
+  .pillar{padding-block:clamp(48px,6vw,74px);border-top:1px solid var(--line)}
+  .pillar-grid{display:grid;grid-template-columns:0.85fr 1.15fr;gap:clamp(28px,5vw,64px);align-items:start}
+  @media (max-width:860px){.pillar-grid{grid-template-columns:1fr;gap:32px}}
+  .pillar-lead .idx{font-family:var(--font-mono);font-size:13px;letter-spacing:.18em;color:var(--violet);text-transform:uppercase}
+  .pillar-lead h3{font-size:clamp(26px,3.6vw,40px);margin-top:14px;letter-spacing:-.015em}
+  .pillar-lead .frame{margin-top:16px;font-family:var(--font-mono);font-size:12.5px;color:var(--ink-faint);letter-spacing:.03em;text-transform:uppercase}
+  .pillar-lead .body{margin-top:20px;color:var(--ink-soft);font-size:16.5px;max-width:40ch}
+  .stat{margin-top:30px;border-top:1px solid var(--line);padding-top:24px}
+  .stat .fig{font-family:var(--font-display);font-weight:500;font-size:clamp(30px,5vw,50px);line-height:1;letter-spacing:-.02em;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .stat .fig .to{color:var(--violet)}
+  .stat .cap{margin-top:12px;font-size:14px;color:var(--ink-soft);max-width:38ch}
+  .cases{display:flex;flex-direction:column;gap:14px}
+  .case{background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:22px 24px;box-shadow:var(--shadow);transition:transform .2s ease,border-color .2s ease}
+  .case:hover{transform:translateY(-2px);border-color:var(--line-strong)}
+  .case h4{font-family:var(--font-body);font-weight:600;font-size:16px;margin:0 0 7px;display:flex;align-items:center;gap:10px}
+  .case h4 .tick{width:7px;height:7px;border-radius:50%;background:var(--violet);flex:0 0 auto}
+  .case p{font-size:15px;color:var(--ink-soft);line-height:1.55}
+  .case p q{font-style:italic;color:var(--ink)}
+  .habit{margin-top:18px;font-family:var(--font-mono);font-size:13px;color:var(--ink);background:var(--recess);border-radius:11px;padding:14px 18px;line-height:1.5}
+  .habit b{color:var(--violet)}
+
+  /* ---------- GAINSIGHT CHAPTER ---------- */
+  .chapter{background:var(--chapter);color:var(--chapter-ink);border-radius:28px;margin:clamp(20px,4vw,40px) auto;max-width:calc(var(--maxw) + 2*var(--gut));position:relative;overflow:hidden}
+  .chapter::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 100% 0,color-mix(in srgb,var(--chapter-2) 90%,transparent),transparent 60%);pointer-events:none}
+  .chapter-in{position:relative;padding:clamp(48px,7vw,92px) var(--gut)}
+  .chapter .eyebrow{color:var(--chapter-soft)}
+  .chapter h2{color:var(--chapter-ink);font-size:clamp(30px,4.6vw,52px);margin-top:16px;max-width:20ch}
+  .chapter .kicker{color:var(--chapter-soft);margin-top:20px;font-size:19px;max-width:60ch}
+  .distinction{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:48px;border:1px solid var(--chapter-line);border-radius:18px;overflow:hidden}
+  @media (max-width:720px){.distinction{grid-template-columns:1fr}}
+  .dist{padding:28px 30px;background:rgba(255,255,255,0.02)}
+  .dist:first-child{border-right:1px solid var(--chapter-line)}
+  @media (max-width:720px){.dist:first-child{border-right:none;border-bottom:1px solid var(--chapter-line)}}
+  .dist .tag{font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--chapter-soft)}
+  .dist h3{color:var(--chapter-ink);font-family:var(--font-body);font-weight:600;font-size:18px;margin:12px 0 10px}
+  .dist p{font-size:15px;color:var(--chapter-soft);line-height:1.55}
+  .dist.you{background:rgba(158,130,255,0.09)}
+  .dist.you .tag{color:var(--chapter-accent)}
+  .chapter-sub{margin-top:52px}
+  .chapter-sub h3.h{font-family:var(--font-mono);font-weight:500;font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--chapter-soft);margin-bottom:22px;display:flex;align-items:center;gap:12px}
+  .chapter-sub h3.h::after{content:"";flex:1;height:1px;background:var(--chapter-line)}
+  .unlock-now{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media (max-width:820px){.unlock-now{grid-template-columns:1fr}}
+  .nowcard{border:1px solid var(--chapter-line);border-radius:14px;padding:22px 22px 24px;background:rgba(255,255,255,0.03)}
+  .nowcard .where{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--chapter-accent);margin-bottom:10px}
+  .nowcard p{font-size:14.5px;color:var(--chapter-soft);line-height:1.55}
+  .unlock-cfg{display:flex;flex-direction:column;gap:1px;background:var(--chapter-line);border:1px solid var(--chapter-line);border-radius:14px;overflow:hidden}
+  .cfg{background:var(--chapter);padding:20px 24px;display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:baseline}
+  .cfg .lead{font-family:var(--font-body);font-weight:600;color:var(--chapter-ink);font-size:15.5px}
+  .cfg p{color:var(--chapter-soft);font-size:14.5px;line-height:1.55}
+  @media (max-width:640px){.cfg{grid-template-columns:1fr;gap:6px}}
+  .start{margin-top:40px;border:1px solid var(--chapter-line);border-radius:16px;padding:26px 28px;background:linear-gradient(180deg,rgba(158,130,255,0.10),transparent)}
+  .start .tag{font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--chapter-accent)}
+  .start p{margin-top:12px;font-family:var(--font-display);font-size:clamp(19px,2.4vw,26px);font-weight:500;line-height:1.35;color:var(--chapter-ink);max-width:54ch}
+
+  /* ---------- JOURNEY ---------- */
+  .stairs{margin-top:56px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:end}
+  @media (max-width:800px){.stairs{grid-template-columns:1fr;align-items:stretch}}
+  .step{border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:var(--shadow);padding:26px 24px;position:relative;overflow:hidden}
+  .step .bar{position:absolute;top:0;left:0;right:0;height:4px;background:var(--violet)}
+  .step .num{font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;color:var(--ink-faint)}
+  .step h3{font-family:var(--font-display);font-size:26px;font-weight:600;margin:10px 0 8px}
+  .step .who{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--violet)}
+  .step p{margin-top:14px;font-size:14.5px;color:var(--ink-soft);line-height:1.55}
+  .step.s1{transform:none}
+  @media (min-width:801px){.step.s2{margin-bottom:34px}.step.s3{margin-bottom:68px}}
+  .measure{margin-top:56px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .m{background:var(--surface);padding:24px}
+  .m .h{font-family:var(--font-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--violet);margin-bottom:14px}
+  .m ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px}
+  .m li{font-size:14px;color:var(--ink-soft);line-height:1.45;padding-left:16px;position:relative}
+  .m li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;background:var(--line-strong)}
+  .credible{margin-top:28px;font-size:15px;color:var(--ink-soft);max-width:70ch;border-left:3px solid var(--line-strong);padding-left:20px}
+  .credible b{color:var(--ink)}
+
+  /* ---------- CLOSING ---------- */
+  .closing{text-align:center;padding-top:clamp(70px,10vw,120px)}
+  .closing .eyebrow{display:block;margin-bottom:24px}
+  .closing p.big{font-family:var(--font-display);font-weight:500;font-size:clamp(24px,3.6vw,40px);line-height:1.3;letter-spacing:-.015em;max-width:22ch;margin:0 auto}
+  .closing p.big em{font-style:italic;color:var(--violet)}
+
+  footer{border-top:1px solid var(--line);margin-top:clamp(60px,9vw,110px)}
+  .foot-in{max-width:var(--maxw);margin:0 auto;padding:44px var(--gut);display:flex;gap:26px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+  .foot-msg{font-family:var(--font-display);font-size:clamp(19px,2.4vw,26px);font-weight:500;letter-spacing:-.01em}
+  .foot-msg span{color:var(--ink-faint);display:block;font-family:var(--font-body);font-size:14px;font-weight:400;margin-top:6px}
+  .foot-cta{text-decoration:none;font-weight:600;font-size:15px;color:#fff;background:var(--violet);padding:13px 26px;border-radius:999px;transition:transform .18s,filter .18s}
+  .foot-cta:hover{transform:translateY(-1px);filter:brightness(1.06)}
+  .foot-fine{max-width:var(--maxw);margin:0 auto;padding:0 var(--gut) 40px;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;color:var(--ink-faint);display:flex;gap:8px;align-items:center}
+  .foot-fine .glyph{width:15px;height:15px}
+
+  html.js .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+  html.js .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion: reduce){html.js .reveal{opacity:1;transform:none;transition:none}}
+
+  @media (max-width:820px){
+    .nav-links{display:none}
+    .nav-cta{margin-left:0}
+    .nav-toggle{display:block}
+    .nav.open .nav-links{display:flex;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;background:var(--paper);border-bottom:1px solid var(--line);padding:10px var(--gut) 20px;gap:2px}
+    .nav.open .nav-links a{padding:12px 10px;font-size:16px;text-align:center}
+    .nav.open .nav-cta{align-self:center;margin-top:12px;padding:11px 22px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= NAV ================= -->
+<header class="nav" id="nav">
+  <div class="nav-in">
+    <a class="brand" href="#top" aria-label="Staircase, a Gainsight company">
+      <svg class="glyph" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M3 20h4v-5h5v-5h5V5h4" stroke="var(--violet)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Staircase<small>A Gainsight company</small></span>
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks">Menu</button>
+    <nav class="nav-links" id="navLinks" aria-label="Sections">
+      <a href="#dayone">Day one</a>
+      <a href="#pillars">Value</a>
+      <a href="#gainsight">In Gainsight</a>
+      <a href="#journey">Journey</a>
+      <a class="nav-cta" href="#see">See it on your accounts</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Full-Spectrum Capture</span>
+    <h1>Every account tells you where it is headed. <em>Long before</em> a health score does.</h1>
+    <p class="hero-lede">The signal is already in the conversations happening every week: the support thread that turns tense, the champion who goes quiet, the line in a call about a second team that wants access. Staircase reads all of it, continuously. <b>You do not need Staircase to get value from your customer success platform. You need it to see the relationship signal nothing else captures.</b></p>
+
+    <figure class="readout reveal" aria-label="Illustration of a continuous relationship signal read across communication channels">
+      <div class="readout-head">
+        <span class="live"><span class="dot"></span>Reading now</span>
+        <span class="label">One account, one relationship signal</span>
+        <span class="chip">continuous, no configuration</span>
+      </div>
+      <svg class="readout-svg" viewBox="0 0 1200 250" preserveAspectRatio="none" role="img" aria-hidden="true">
+        <defs>
+          <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="var(--violet)" stop-opacity="0.16"/>
+            <stop offset="1" stop-color="var(--violet)" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <g stroke="var(--line)" stroke-width="1">
+          <line x1="0" y1="62" x2="1200" y2="62"/>
+          <line x1="0" y1="125" x2="1200" y2="125"/>
+          <line x1="0" y1="188" x2="1200" y2="188"/>
+        </g>
+        <path id="trace" d="M0,120 C90,110 140,96 210,100 C280,104 300,150 360,168 C410,182 440,150 500,140 C560,131 590,168 660,182 C720,193 740,150 810,120 C880,92 930,64 1010,58 C1080,53 1130,60 1200,54"
+              fill="none" stroke="var(--violet)" stroke-width="2.6" stroke-linecap="round"/>
+        <path d="M0,120 C90,110 140,96 210,100 C280,104 300,150 360,168 C410,182 440,150 500,140 C560,131 590,168 660,182 C720,193 740,150 810,120 C880,92 930,64 1010,58 C1080,53 1130,60 1200,54 L1200,250 L0,250 Z" fill="url(#fill)" stroke="none"/>
+        <g>
+          <circle cx="360" cy="168" r="5.5" fill="var(--amber)"/>
+          <circle cx="660" cy="182" r="5.5" fill="var(--amber)"/>
+          <circle cx="1010" cy="58" r="5.5" fill="var(--signal)"/>
+        </g>
+      </svg>
+      <div class="annot" style="display:flex;flex-wrap:wrap;gap:0;border-top:1px solid var(--line)">
+        <div style="flex:1;min-width:180px;padding:14px 18px;border-right:1px solid var(--line);font-family:var(--font-mono);font-size:11.5px;line-height:1.5;color:var(--ink-soft)"><span style="color:var(--amber)">&#9679;</span> support thread turns tense</div>
+        <div style="flex:1;min-width:180px;padding:14px 18px;border-right:1px solid var(--line);font-family:var(--font-mono);font-size:11.5px;line-height:1.5;color:var(--ink-soft)"><span style="color:var(--amber)">&#9679;</span> champion goes quiet</div>
+        <div style="flex:1;min-width:180px;padding:14px 18px;font-family:var(--font-mono);font-size:11.5px;line-height:1.5;color:var(--ink-soft)"><span style="color:var(--signal)">&#9679;</span> second team wants access</div>
+      </div>
+      <div class="channels">
+        <span class="ch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Email</span>
+        <span class="ch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Calendar</span>
+        <span class="ch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="m16 10 6-3v10l-6-3"/></svg>Meetings</span>
+        <span class="ch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h4l2 5-3 2a12 12 0 0 0 6 6l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 2 6a2 2 0 0 1 2-2Z"/></svg>Calls</span>
+        <span class="ch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v11H8l-4 4Z"/><path d="M8 10h8M8 13h5"/></svg>Support</span>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<!-- ================= DAY ONE ================= -->
+<section id="dayone">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">What Staircase produces on day one</span>
+      <h2>Connect your communications, and value arrives with no configuration.</h2>
+      <p class="kicker">Staircase reads every team's touchpoints on the account, across the channels where customer relationships actually happen. Five outputs land the moment ingestion begins.</p>
+    </div>
+
+    <div class="outputs reveal">
+      <div class="out">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16M4 12h10M4 17h13"/></svg>
+        <span class="n">01</span>
+        <h3>Topics</h3>
+        <p>What customers are actually talking about, across the whole book.</p>
+      </div>
+      <div class="out">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 15c4-9 14-9 18 0"/><circle cx="12" cy="9" r="1.4" fill="currentColor" stroke="none"/></svg>
+        <span class="n">02</span>
+        <h3>Sentiment</h3>
+        <p>The tone and trajectory of each relationship, tracked over time.</p>
+      </div>
+      <div class="out">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><circle cx="12" cy="12" r="3.4"/></svg>
+        <span class="n">03</span>
+        <h3>Events and signals</h3>
+        <p>Automatic flags when something matters: an account going quiet, a risk cue, a buying signal.</p>
+      </div>
+      <div class="out">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        <span class="n">04</span>
+        <h3>Summaries</h3>
+        <p>Always-current account context, assembled from real conversations.</p>
+      </div>
+      <div class="out">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c1.5-4 12.5-4 14 0"/></svg>
+        <span class="n">05</span>
+        <h3>AI Analysts</h3>
+        <p>Risk and Expansion analysts that read the communications and explain the why.</p>
+      </div>
+    </div>
+
+    <div class="standing reveal">
+      <p>A call summary tells you what happened in one meeting. Staircase is <b>the standing view: current between meetings, not just after them.</b></p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PILLARS ================= -->
+<section id="pillars">
+  <div class="wrap">
+    <div class="pillars-intro sec-head reveal">
+      <span class="eyebrow">Three pillars of value</span>
+      <h2>Everything Staircase does rolls up into three outcomes.</h2>
+      <p class="kicker">Lead with the outcome; the mechanism follows.</p>
+    </div>
+
+    <!-- PILLAR 1 -->
+    <div class="pillar reveal">
+      <div class="pillar-grid">
+        <div class="pillar-lead">
+          <span class="idx">Pillar 01</span>
+          <h3>Give time back to your teams</h3>
+          <p class="frame">The economic frame: hours saved</p>
+          <p class="body">Your team stops being researchers and reassemblers of context. The account picture is already current the moment they need it.</p>
+          <div class="stat">
+            <div class="fig">90 min <span class="to">&rarr;</span> 5 min</div>
+            <p class="cap">Exec briefings drop from ninety minutes to five.</p>
+          </div>
+        </div>
+        <div class="cases">
+          <div class="case">
+            <h4><span class="tick"></span>The Monday sweep</h4>
+            <p>A CSM with 50 accounts opens the week already knowing which moved over the weekend, sorted by sentiment change and new events. The first hour goes to deciding what to do, not figuring out what happened.</p>
+          </div>
+          <div class="case">
+            <h4><span class="tick"></span>Meeting prep, 20 minutes to 3</h4>
+            <p>No more searching six tabs and pinging the AE. What has been discussed, what is open, who has gone quiet, all in one place. Read for three minutes, walk in current.</p>
+          </div>
+          <div class="case">
+            <h4><span class="tick"></span>A new CSM inherits 45 accounts in a day</h4>
+            <p>Territory reshuffles historically cost two to four weeks of ramp, and the customer feels the drop. With Staircase the incoming CSM reads each account's history, relationships, and open risks in an afternoon. The customer never notices the handoff.</p>
+          </div>
+          <p class="habit">The habit that unlocks it: <b>before you ask a teammate, Ask Staircase.</b></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PILLAR 2 -->
+    <div class="pillar reveal">
+      <div class="pillar-grid">
+        <div class="pillar-lead">
+          <span class="idx">Pillar 02</span>
+          <h3>Protect revenue, accelerate growth</h3>
+          <p class="frame">The economic frame: revenue protected and expansion captured</p>
+          <p class="body">A health score that turns red the month before renewal is already too late. A risk signal that arrives with the exact sentence a stakeholder wrote, plus the root cause behind it, is early enough to save the account.</p>
+          <div class="stat">
+            <div class="fig">Weeks <span class="to">earlier</span></div>
+            <p class="cap">Risk surfaced weeks earlier, with the quote that fired it and the root cause behind it.</p>
+          </div>
+        </div>
+        <div class="cases">
+          <div class="case">
+            <h4><span class="tick"></span>Caught early enough to save</h4>
+            <p>A champion writes, buried in a long thread, <q>we are being asked to justify this spend in the next budget review.</q> Nobody flags it. Staircase catches the sentence when it is written, ties it to a risk signal with the quote attached, and names the root cause: budget scrutiny, not product dissatisfaction. The CSM opens an executive-alignment play while there is still runway.</p>
+          </div>
+          <div class="case">
+            <h4><span class="tick"></span>Expansion sourced from a signal, not a hunch</h4>
+            <p>A stakeholder mentions a new team or use case on a 40-minute call. The Expansion Analyst tracks it and keeps it warm week over week, so the CSM acts on a specific opening in the customer's own words, and the sourced opportunity is attributable.</p>
+          </div>
+          <div class="case">
+            <h4><span class="tick"></span>Leadership sees the whole book</h4>
+            <p>Risk and expansion roll up across the portfolio, so the forecast conversation is about where to spend the team's attention, with the evidence one click away when a call gets challenged.</p>
+          </div>
+          <div class="case">
+            <h4><span class="tick"></span>Voice of Customer reaches product</h4>
+            <p>The same friction shows up across fifteen accounts. Individually each CSM notes it and moves on. Staircase surfaces the recurring theme with volume and examples, so CS brings product a pattern with evidence, then closes the loop with customers later.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PILLAR 3 -->
+    <div class="pillar reveal">
+      <div class="pillar-grid">
+        <div class="pillar-lead">
+          <span class="idx">Pillar 03</span>
+          <h3>Make every system customer-aware</h3>
+          <p class="frame">The economic frame: intelligence reach and compounding AI value</p>
+          <p class="body">The intelligence should not live only in Staircase. It should reach the CRM, the data lake, Slack and Teams, and any AI agent your company runs.</p>
+          <div class="stat">
+            <div class="fig">Compounding</div>
+            <p class="cap">Every system you make customer-aware saves more time and protects more revenue than Staircase could on its own.</p>
+          </div>
+        </div>
+        <div class="cases">
+          <div class="case">
+            <h4><span class="tick"></span>Closed-Loop Orchestration</h4>
+            <p>A risk signal fires, creates a task in your CRM with an owner and a due date, and kicks off the right play. Intelligence becomes action, without anyone having to notice the signal and start the play by hand.</p>
+          </div>
+          <div class="case">
+            <h4><span class="tick"></span>Unified Health View</h4>
+            <p>Most health scores are built on usage and tickets, which miss the relationship. Staircase sentiment and engagement blend with operational health into one score on one view. A green account that has gone quiet and cold in email stops looking green.</p>
+          </div>
+          <div class="case">
+            <h4><span class="tick"></span>Signals where work happens</h4>
+            <p>Events pipe into Slack or Teams, so the team reacts in hours, not at the next weekly review.</p>
+          </div>
+          <div class="case">
+            <h4><span class="tick"></span>Context in any agent, via MCP</h4>
+            <p>The renewal-prep agent your ops team builds, or a CSM's own AI assistant, pulls live account context from Staircase. The more you automate, the more each automation knows.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GAINSIGHT CHAPTER ================= -->
+<section id="gainsight" style="padding-block:clamp(20px,4vw,48px)">
+  <div class="chapter reveal">
+    <div class="chapter-in">
+      <span class="eyebrow">A featured chapter</span>
+      <h2>Staircase inside Gainsight CS</h2>
+      <p class="kicker">If your teams already live in Gainsight CS, the question is simple: does Staircase make the Gainsight you already run sharper? It does, and it shows up inside the workflows your CSMs, AEs, and leaders open every day.</p>
+
+      <div class="distinction">
+        <div class="dist">
+          <span class="tag">Gainsight AI Summary</span>
+          <h3>Recaps what your team wrote down</h3>
+          <p>It recaps the activity already in Gainsight: the Timeline entries someone logged, the CTAs, the fields your team maintains. It is good at what it does.</p>
+        </div>
+        <div class="dist you">
+          <span class="tag">Staircase</span>
+          <h3>Tells you what is actually happening</h3>
+          <p>It reads the email, calls, meetings, and support tickets across every team, continuously. Most of that never becomes a Gainsight field. Then it puts what it finds where your team already works.</p>
+        </div>
+      </div>
+
+      <div class="chapter-sub">
+        <h3 class="h">The moment you connect, no configuration</h3>
+        <div class="unlock-now">
+          <div class="nowcard">
+            <div class="where">In C360 and R360</div>
+            <p>The account summary, live topics, sentiment trend, and the Risk and Expansion read-outs appear on the views your CSMs already open.</p>
+          </div>
+          <div class="nowcard">
+            <div class="where">In Timeline</div>
+            <p>Communication-driven events land alongside logged activity, so the account story is continuous, not just what someone remembered to write up.</p>
+          </div>
+          <div class="nowcard">
+            <div class="where">In Cockpit and Home</div>
+            <p>The signals worth attention sit next to the CTAs and tasks your team already works.</p>
+          </div>
+        </div>
+        <p style="margin-top:22px;color:var(--chapter-soft);font-size:15.5px;max-width:64ch">Every team working in Gainsight can see what Staircase sees, in context, without changing how they work.</p>
+      </div>
+
+      <div class="chapter-sub">
+        <h3 class="h">What you unlock with configuration</h3>
+        <div class="unlock-cfg">
+          <div class="cfg"><span class="lead">Enrich health scores</span><p>Add Staircase sentiment, engagement, and scores as Scorecard measures. A customer can log in daily and still be quietly shopping a competitor. A blended score moves when the relationship moves, not only when usage dips.</p></div>
+          <div class="cfg"><span class="lead">Fire CTAs off risk</span><p>A detected risk event opens a CTA that already carries the root cause and the exact quote, and assigns the playbook. Not a generic "health dropped, investigate," but a task that shows the sentence proving what is wrong.</p></div>
+          <div class="cfg"><span class="lead">Re-engage with Journey Orchestrator</span><p>An account-dark signal, or a window with no decision-maker or executive contact, enrolls the account into a JO re-engagement program before the silence surfaces too late.</p></div>
+          <div class="cfg"><span class="lead">Automate with the Rules Engine</span><p>Anything you already automate on Gainsight data, you can now automate on the communication signal underneath it.</p></div>
+          <div class="cfg"><span class="lead">One unified 360</span><p>Usage, adoption, and support status from Gainsight, next to sentiment, engagement, and communication-driven risk and expansion from Staircase. Operational health and relationship health, read together.</p></div>
+        </div>
+      </div>
+
+      <div class="start">
+        <span class="tag">Where to start</span>
+        <p>Turn on the field sync and let the out-of-the-box surfaces prove the signal is real. Once your team trusts what it sees in C360, Timeline, and Cockpit, extend into Scorecard measures and the CTA, JO, and Rules Engine automation. Start small, and scale it as far as you want to take it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= JOURNEY ================= -->
+<section id="journey">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">The value journey</span>
+      <h2>Unlock, Adopt, Prove.</h2>
+      <p class="kicker">Value is immediate on connection, then deepens on a simple path. This is also a map: any team can locate where it stands today and see the next step.</p>
+    </div>
+
+    <div class="stairs">
+      <div class="step s1 reveal">
+        <span class="bar"></span>
+        <span class="num">Step 01</span>
+        <h3>Unlock</h3>
+        <span class="who">Admins, RevOps</span>
+        <p>Connect comms. Set tiers, topics, and stakeholder roles for your business. Wire notifications into Slack, Teams, and webhooks. Export signals and aggregate data to your data lake so the whole org can use them. Set up the MCP connector and build skills that automate awareness and action.</p>
+      </div>
+      <div class="step s2 reveal">
+        <span class="bar"></span>
+        <span class="num">Step 02</span>
+        <h3>Adopt</h3>
+        <span class="who">CS leaders, managers, CSMs</span>
+        <p>The team builds the habit: check context before every call, act on the signals. Teammates begin using the intelligence inside their own AI and agent flows, in automated, valuable ways.</p>
+      </div>
+      <div class="step s3 reveal">
+        <span class="bar"></span>
+        <span class="num">Step 03</span>
+        <h3>Prove</h3>
+        <span class="who">Leaders, admins</span>
+        <p>Measure it: risk caught earlier, hours saved, expansion sourced.</p>
+      </div>
+    </div>
+
+    <div class="measure reveal">
+      <div class="m">
+        <div class="h">Time given back</div>
+        <ul>
+          <li>Prep time before and after</li>
+          <li>Brief authoring time</li>
+          <li>New-CSM time-to-productive</li>
+          <li>Ask Staircase queries per user</li>
+        </ul>
+      </div>
+      <div class="m">
+        <div class="h">Revenue protected</div>
+        <ul>
+          <li>Risk lead time, days from signal to renewal</li>
+          <li>Risks surfaced with evidence and acted on</li>
+          <li>At-risk ARR with an active save play</li>
+        </ul>
+      </div>
+      <div class="m">
+        <div class="h">Growth captured</div>
+        <ul>
+          <li>Expansion opportunities sourced from a signal</li>
+          <li>Win rate on those</li>
+          <li>VoC themes delivered to product</li>
+        </ul>
+      </div>
+      <div class="m">
+        <div class="h">Reach</div>
+        <ul>
+          <li>Signal-to-action latency</li>
+          <li>Share of risk signals that auto-create a CTA</li>
+          <li>Systems consuming Staircase data</li>
+          <li>MCP query volume</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="credible reveal">Two rules keep the numbers credible: <b>tag at the source</b>, and <b>separate what you can attribute</b> (lead time, counts, sourced ARR) from what you can only watch (retention trend).</p>
+  </div>
+</section>
+
+<!-- ================= CLOSING ================= -->
+<section class="closing" id="see">
+  <div class="wrap">
+    <span class="eyebrow">The short version</span>
+    <p class="big">You feel value the day you connect your communications. From there it deepens as you wire the signal into your health scores, your plays, your channels, and your agents. <em>The value is immediate, and it grows with you.</em></p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="foot-in">
+    <div class="foot-msg">Want to see it on your own accounts?
+      <span>A short look at what Staircase surfaces on the relationships you already manage. No pressure.</span>
+    </div>
+    <a class="foot-cta" href="#top">Start a conversation</a>
+  </div>
+  <div class="foot-fine">
+    <svg class="glyph" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 20h4v-5h5v-5h5V5h4" stroke="var(--ink-faint)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Staircase, a Gainsight company. Full-Spectrum Capture.
+  </div>
+</footer>
+
+<script>
+  // Mobile nav
+  var nav = document.getElementById('nav');
+  var toggle = document.getElementById('navToggle');
+  toggle.addEventListener('click', function(){
+    var open = nav.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  document.querySelectorAll('#navLinks a, .nav-cta').forEach(function(a){
+    a.addEventListener('click', function(){ nav.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); });
+  });
+
+  // Active section highlight
+  var links = Array.prototype.slice.call(document.querySelectorAll('.nav-links a'));
+  var map = {};
+  links.forEach(function(l){ map[l.getAttribute('href').slice(1)] = l; });
+  var spy = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && map[e.target.id]){
+        links.forEach(function(l){ l.classList.remove('active'); });
+        map[e.target.id].classList.add('active');
+      }
+    });
+  }, {rootMargin:'-45% 0px -50% 0px'});
+  ['dayone','pillars','gainsight','journey'].forEach(function(id){
+    var el = document.getElementById(id); if(el) spy.observe(el);
+  });
+
+  // Reveal on scroll
+  var rev = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); rev.unobserve(e.target); } });
+  }, {rootMargin:'0px 0px -8% 0px', threshold:0.08});
+  document.querySelectorAll('.reveal').forEach(function(el){ rev.observe(el); });
+
+  // Draw the signal trace on load
+  var trace = document.getElementById('trace');
+  if(trace && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    try{
+      var len = trace.getTotalLength();
+      trace.style.strokeDasharray = len;
+      trace.style.strokeDashoffset = len;
+      trace.style.transition = 'stroke-dashoffset 1.8s ease .25s';
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){ trace.style.strokeDashoffset = '0'; }); });
+    }catch(e){}
+  }
+</script>
+</body>
+</html>
