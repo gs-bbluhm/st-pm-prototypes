@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reassociate communication — Staircase modal prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:        #1b1c31;   /* titles / near-black navy */
+    --body:       #2b2d42;   /* body text */
+    --muted:      #6b7280;   /* helper text */
+    --placeholder:#8a93a2;
+    --border:     #d5d9e0;
+    --border-soft:#e6e9ef;
+    --field-bg:   #ffffff;
+    --field-disabled:#f3f4f7;
+    --blue:       #2e6bf5;   /* primary */
+    --blue-hover: #245fe0;
+    --blue-tint:  #eef3ff;
+    --red:        #f15c5c;   /* destructive asterisk */
+    --chip-bg:    #f1f3f8;
+    --chip-border:#dfe3ec;
+    --shadow:     0 24px 60px rgba(20, 22, 45, .28);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--body);
+    /* Faux app background so the modal reads on a blurred backdrop like the examples */
+    background:
+      linear-gradient(180deg, rgba(245,246,250,.6), rgba(245,246,250,.6)),
+      repeating-linear-gradient(180deg, #f6f7fb 0 46px, #eef0f6 46px 47px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(28, 30, 45, .45);
+    display: flex;
+    align-items: safe center;   /* center when it fits, no top cutoff when taller */
+    justify-content: center;
+    padding: 32px;
+    overflow-y: auto;           /* page scrolls only if the window is genuinely too short */
+  }
+
+  .modal {
+    width: 660px;
+    max-width: 100%;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    animation: pop .18s ease-out;
+  }
+  @keyframes pop { from { transform: translateY(6px) scale(.99); opacity: 0; } to { transform: none; opacity: 1; } }
+
+  .modal__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 30px 32px 6px;
+  }
+  .modal__title {
+    font-size: 27px;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0;
+    letter-spacing: -.01em;
+  }
+  .modal__close {
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    color: var(--ink);
+    padding: 4px;
+    line-height: 0;
+    border-radius: 8px;
+  }
+  .modal__close:hover { background: #f3f4f7; }
+
+  .modal__body { padding: 8px 32px 26px; }
+
+  /* Context card */
+  .context {
+    background: #f8f9fc;
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin: 10px 0 22px;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .context strong { color: var(--ink); font-weight: 600; }
+  .context .contacts-line {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--chip-bg);
+    border: 1px solid var(--chip-border);
+    color: var(--body);
+    border-radius: 999px;
+    padding: 4px 11px;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue); }
+
+  /* Fields */
+  .field { margin-bottom: 20px; }
+  .label {
+    display: block;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .label .req { color: var(--red); margin-right: 4px; }
+
+  .select, .input {
+    width: 100%;
+    height: 50px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--field-bg);
+    padding: 0 16px;
+    font: inherit;
+    font-size: 15px;
+    color: var(--ink);
+    appearance: none;
+    outline: none;
+  }
+  .select:focus, .input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(46,107,245,.14); }
+  .select-wrap { position: relative; }
+  .select-wrap::after {
+    content: "";
+    position: absolute;
+    right: 18px; top: 50%;
+    width: 9px; height: 9px;
+    border-right: 2px solid #7b8494;
+    border-bottom: 2px solid #7b8494;
+    transform: translateY(-70%) rotate(45deg);
+    pointer-events: none;
+  }
+  .helper { font-size: 13px; color: var(--muted); margin-top: 7px; }
+
+  /* Divider */
+  .rule-divider { height: 1px; background: var(--border-soft); margin: 6px 0 20px; }
+
+  /* Remember toggle row */
+  .remember {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+  }
+  .switch { position: relative; width: 44px; height: 26px; flex: 0 0 auto; margin-top: 2px; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute; inset: 0;
+    background: #cbd2dc; border-radius: 999px;
+    transition: .18s;
+    cursor: pointer;
+  }
+  .slider::before {
+    content: ""; position: absolute;
+    height: 20px; width: 20px; left: 3px; top: 3px;
+    background: #fff; border-radius: 50%;
+    transition: .18s; box-shadow: 0 1px 3px rgba(0,0,0,.2);
+  }
+  .switch input:checked + .slider { background: var(--blue); }
+  .switch input:checked + .slider::before { transform: translateX(18px); }
+  .remember__text .t { font-size: 15px; font-weight: 600; color: var(--ink); }
+  .remember__text .s { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+  /* Rule builder */
+  .rule-builder {
+    margin-top: 20px;
+    border: 1px solid var(--border-soft);
+    background: #fbfcfe;
+    border-radius: 12px;
+    padding: 18px 18px 16px;
+  }
+  .rule-builder.hidden { display: none; }
+  .rule-builder__lead {
+    font-size: 14px;
+    color: var(--body);
+    margin: 0 0 14px;
+  }
+  .rule-builder__lead strong { color: var(--ink); font-weight: 600; }
+
+  .opt {
+    border: 1.5px solid var(--border);
+    border-radius: 11px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    background: #fff;
+    transition: border-color .12s, background .12s;
+  }
+  .opt:last-child { margin-bottom: 0; }
+  .opt.selected { border-color: var(--blue); background: var(--blue-tint); }
+  .opt__head { display: flex; align-items: center; gap: 11px; }
+  .radio {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 2px solid #b7bece; flex: 0 0 auto; position: relative;
+  }
+  .opt.selected .radio { border-color: var(--blue); }
+  .opt.selected .radio::after {
+    content: ""; position: absolute; inset: 3px;
+    background: var(--blue); border-radius: 50%;
+  }
+  .opt__title { font-size: 15px; font-weight: 600; color: var(--ink); }
+  .badge {
+    font-size: 11px; font-weight: 600; color: var(--blue);
+    background: #fff; border: 1px solid #cfe0ff;
+    padding: 2px 8px; border-radius: 999px; margin-left: 6px;
+  }
+  .opt__body { margin: 11px 0 0 31px; }
+  .opt__help { font-size: 13px; color: var(--muted); margin-top: 9px; }
+
+  .mini-select {
+    height: 42px; border: 1px solid var(--border); border-radius: 9px;
+    background: #fff; padding: 0 14px; font: inherit; font-size: 14px; color: var(--ink);
+    appearance: none; width: 260px; outline: none;
+  }
+  .mini-select-wrap { position: relative; display: inline-block; }
+  .mini-select-wrap::after {
+    content: ""; position: absolute; right: 14px; top: 50%;
+    width: 7px; height: 7px; border-right: 2px solid #7b8494; border-bottom: 2px solid #7b8494;
+    transform: translateY(-70%) rotate(45deg); pointer-events: none;
+  }
+
+  .contact-picker { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pick {
+    display: inline-flex; align-items: center; gap: 10px;
+    border: 1.5px solid var(--chip-border); background: #fff;
+    color: var(--body); border-radius: 12px; padding: 8px 14px;
+    cursor: pointer; user-select: none;
+  }
+  .pick .check {
+    width: 16px; height: 16px; border-radius: 5px; border: 1.5px solid #b7bece;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 10px; color: #fff; flex: 0 0 auto;
+  }
+  .pick.on { border-color: var(--blue); background: var(--blue-tint); }
+  .pick.on .check { background: var(--blue); border-color: var(--blue); }
+  .pick__id { display: flex; flex-direction: column; line-height: 1.25; }
+  .pick__name { font-size: 14px; font-weight: 600; color: var(--body); }
+  .pick.on .pick__name { color: var(--ink); }
+  .pick__email { font-size: 12px; color: var(--muted); }
+
+  .contact-checklist { display: flex; flex-direction: column; gap: 9px; align-items: flex-start; margin-bottom: 4px; }
+  .rule-help {
+    font-size: 13px; color: var(--muted); line-height: 1.5;
+    margin-top: 12px; padding: 11px 13px;
+    background: #fff; border: 1px solid var(--border-soft); border-radius: 9px;
+  }
+  .rule-help strong { color: var(--ink); font-weight: 600; }
+
+  .precedence {
+    margin-top: 14px; font-size: 12.5px; color: var(--muted);
+    display: flex; align-items: center; gap: 7px;
+  }
+  .precedence .i {
+    width: 15px; height: 15px; border-radius: 50%; background: #dfe4ee; color: #5b6472;
+    font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center;
+  }
+
+  .footnote {
+    margin-top: 18px; font-size: 12.5px; color: var(--muted);
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* Footer */
+  .modal__foot {
+    display: flex;
+    justify-content: flex-end;
+    gap: 14px;
+    padding: 20px 32px 26px;
+    border-top: 1px solid var(--border-soft);
+  }
+  .btn {
+    height: 48px;
+    border-radius: 999px;
+    padding: 0 30px;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: background .12s, border-color .12s;
+  }
+  .btn--ghost { background: #fff; border-color: var(--border); color: var(--body); }
+  .btn--ghost:hover { background: #f6f7fa; }
+  .btn--primary { background: var(--blue); color: #fff; }
+  .btn--primary:hover { background: var(--blue-hover); }
+</style>
+</head>
+<body>
+  <div class="overlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal__head">
+        <h1 class="modal__title" id="modalTitle">Reassociate communication</h1>
+        <button class="modal__close" aria-label="Close">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <div class="modal__body">
+        <div class="context">
+          <span>“<strong>Re: Q3 rollout timeline &amp; owners</strong>” logged to <strong>Ambience Healthcare — Corporate</strong>.</span>
+          <div class="contacts-line">
+            <span>Contacts:</span>
+            <span class="chip">Ryan Chen</span>
+            <span class="chip">James Ortiz</span>
+            <span class="chip">Brandon Lee</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label"><span class="req">*</span>Move to account</label>
+          <div class="select-wrap">
+            <select class="select">
+              <option>Ambience Healthcare — West Region</option>
+              <option>Ambience Healthcare — Corporate (current)</option>
+              <option>Ambience Physician Group</option>
+            </select>
+          </div>
+          <div class="helper">Showing only accounts these contacts belong to.</div>
+        </div>
+
+        <div class="rule-divider"></div>
+
+        <div class="remember">
+          <label class="switch">
+            <input type="checkbox" id="rememberToggle" checked>
+            <span class="slider"></span>
+          </label>
+          <div class="remember__text">
+            <div class="t">Remember this decision</div>
+            <div class="s">Create a rule so future communications route to the right account automatically.</div>
+          </div>
+        </div>
+
+        <div class="rule-builder" id="ruleBuilder">
+          <p class="rule-builder__lead">Route future communications to <strong>Ambience Healthcare — West Region</strong> when these contacts are involved:</p>
+
+          <div class="contact-checklist" id="checklist">
+            <span class="pick on" data-name="Ryan Chen"><span class="check">✓</span><span class="pick__id"><span class="pick__name">Ryan Chen</span><span class="pick__email">ryan.chen@ambiencehealth.com</span></span></span>
+            <span class="pick" data-name="James Ortiz"><span class="check"></span><span class="pick__id"><span class="pick__name">James Ortiz</span><span class="pick__email">james.ortiz@ambiencehealth.com</span></span></span>
+            <span class="pick" data-name="Brandon Lee"><span class="check"></span><span class="pick__id"><span class="pick__name">Brandon Lee</span><span class="pick__email">brandon.lee@ambiencehealth.com</span></span></span>
+          </div>
+
+          <div class="rule-help" id="ruleHelp"></div>
+
+          <div class="precedence">
+            <span class="i">i</span>
+            <span>If two rules could match, the most specific one (more contacts) wins.</span>
+          </div>
+        </div>
+
+        <div class="footnote">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 22a10 10 0 100-20 10 10 0 000 20z" stroke="#9aa2b1" stroke-width="1.6"/><path d="M12 11v5M12 8h.01" stroke="#9aa2b1" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <span>The event moves with the communication and won’t re-trigger notifications.</span>
+        </div>
+      </div>
+
+      <div class="modal__foot">
+        <button class="btn btn--ghost">Cancel</button>
+        <button class="btn btn--primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Toggle rule builder
+    const toggle = document.getElementById('rememberToggle');
+    const builder = document.getElementById('ruleBuilder');
+    const syncBuilder = () => builder.classList.toggle('hidden', !toggle.checked);
+    toggle.addEventListener('change', syncBuilder);
+    syncBuilder();
+
+    // Contact checklist + dynamic helper text
+    const account = 'Ambience Healthcare — West Region';
+    const help = document.getElementById('ruleHelp');
+    const picks = [...document.querySelectorAll('#checklist .pick')];
+
+    function renderHelp() {
+      const on = picks.filter(p => p.classList.contains('on'));
+      if (on.length === 0) {
+        help.innerHTML = 'Select at least one contact for this rule.';
+      } else if (on.length === 1) {
+        const name = on[0].dataset.name;
+        help.innerHTML = `Sets <strong>${account}</strong> as <strong>${name}</strong>’s primary account. Any communication they’re on routes here. Saved to their primary-account field (mappable to your existing “direct contact” field).`;
+      } else {
+        help.innerHTML = `Routes only when <strong>all ${on.length} selected contacts</strong> are on the communication together. Use when a contact appears across several accounts and the grouping is the signal.`;
+      }
+    }
+
+    picks.forEach(p => {
+      p.addEventListener('click', () => {
+        p.classList.toggle('on');
+        p.querySelector('.check').textContent = p.classList.contains('on') ? '✓' : '';
+        renderHelp();
+      });
+    });
+    renderHelp();
+  </script>
+</body>
+</html>
