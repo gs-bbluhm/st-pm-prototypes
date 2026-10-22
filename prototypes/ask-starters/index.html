@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<title>Grouped Ask Starters</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: left, a working copy of the Exec Dashboard Ask box with the Starters panel (Cross-account and Account tabs); right, numbered design notes keyed to markers in the mock. */
+:root {
+  --page: #eef1f6; --canvas: #ffffff; --nav: #1c2333; --nav-ink: #c9d1e0;
+  --ink: #1f2633; --muted: #657085; --line: #dfe4ec; --soft: #f5f7fb;
+  --link: #2f6fed; --link-soft: #e8efff; --token: #fff3c4; --token-ink: #6b4e00;
+  --badge-a: #ec4899; --badge-b: #8b5cf6; --new: #7c3aed; --new-bg: #f1eafe;
+  --marker: #ec4899;
+  --f-ui: "Noto Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --page: #0f131a; --canvas: #171c25; --nav: #0b0e14; --nav-ink: #8e99ad;
+  --ink: #e4e8ef; --muted: #98a3b6; --line: #2a3240; --soft: #1d2430;
+  --link: #8aa8ff; --link-soft: #22304f; --token: #4a3d12; --token-ink: #ffe7a3;
+  --new: #c4a5ff; --new-bg: #2e2248; --marker: #f472b6; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --page: #0f131a; --canvas: #171c25; --nav: #0b0e14; --nav-ink: #8e99ad;
+  --ink: #e4e8ef; --muted: #98a3b6; --line: #2a3240; --soft: #1d2430;
+  --link: #8aa8ff; --link-soft: #22304f; --token: #4a3d12; --token-ink: #ffe7a3;
+  --new: #c4a5ff; --new-bg: #2e2248; --marker: #f472b6; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink); font-family: var(--f-ui); font-size: 14px; line-height: 1.5; }
+.wrap { max-width: 1400px; margin: 0 auto; padding-block: 24px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 18px; }
+.top h1 { font-size: 24px; font-weight: 700; margin: 0; text-wrap: balance; }
+.top p { margin: 4px 0 0; color: var(--muted); max-width: 90ch; }
+.protobar { display: inline-flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 10px; padding: 6px 10px; border: 1.5px dashed var(--muted); border-radius: 8px; }
+.protolabel { font-size: 12px; color: var(--muted); font-weight: 600; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { font: 600 13px var(--f-ui); background: var(--canvas); color: var(--muted); border: 0; padding: 5px 12px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--link-soft); color: var(--link); }
+.seg button:focus-visible { outline: 2px solid var(--link); outline-offset: -2px; }
+.layout { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 1000px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+
+.app { display: grid; grid-template-columns: 56px minmax(0, 1fr); background: var(--canvas); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; min-height: 700px; }
+.rail { background: var(--nav); display: flex; flex-direction: column; align-items: center; gap: 22px; padding-block: 18px; }
+.rail span { width: 24px; height: 24px; border: 2px solid var(--nav-ink); border-radius: 7px; opacity: .8; }
+.rail span:nth-child(2) { border-radius: 50%; } .rail span:nth-child(4) { border-radius: 4px 4px 12px 12px; }
+.main { padding: 22px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.dash-title { font-weight: 600; color: var(--muted); font-size: 13px; }
+.badge { display: inline-block; font-size: 11px; font-weight: 700; color: #fff; background: linear-gradient(90deg, var(--badge-a), var(--badge-b)); padding: 2px 8px; border-radius: 6px 6px 0 0; margin-left: 4px; }
+.askbox { display: flex; align-items: center; gap: 10px; border: 1.5px solid transparent; border-radius: 8px; padding: 10px 10px 10px 14px; background: linear-gradient(var(--canvas), var(--canvas)) padding-box, linear-gradient(90deg, var(--badge-a), var(--badge-b)) border-box; }
+.input { flex: 1; min-width: 0; min-height: 24px; color: var(--ink); outline: none; overflow-wrap: anywhere; }
+.input:empty::before { content: attr(data-placeholder); color: var(--muted); font-style: italic; }
+.tok { background: var(--token); color: var(--token-ink); border-radius: 4px; padding: 0 3px; font-weight: 600; }
+.startersbtn { color: var(--link); background: none; border: 0; font: 600 14px var(--f-ui); cursor: pointer; padding: 4px 6px; border-radius: 6px; white-space: nowrap; }
+.startersbtn:hover, .startersbtn:focus-visible { background: var(--link-soft); outline: none; }
+.send { width: 36px; height: 32px; border-radius: 7px; border: 1px solid var(--line); background: var(--soft); color: var(--muted); font-size: 16px; cursor: pointer; }
+.send:not(:disabled) { background: var(--link); color: #fff; border-color: var(--link); }
+.send:disabled { cursor: not-allowed; }
+.hint { font-size: 12.5px; color: var(--muted); min-height: 18px; }
+
+.panel { background: var(--canvas); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 10px 30px rgba(20, 30, 50, .12); padding: 14px; display: grid; gap: 12px; }
+.panel-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.tabs { display: inline-flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.tab { font: 600 13.5px var(--f-ui); border: 1px solid var(--line); background: var(--canvas); color: var(--ink); border-radius: 999px; padding: 6px 14px; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; }
+.tab .c { font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.tab[aria-selected="true"] { background: var(--link); border-color: var(--link); color: #fff; }
+.tab[aria-selected="true"] .c { color: #fff; opacity: .85; }
+.tab:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+.search { border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; font: 13px var(--f-ui); color: var(--ink); background: var(--canvas); width: 200px; max-width: 100%; }
+.tabsub { font-size: 12.5px; color: var(--muted); }
+.list { display: grid; gap: 6px; }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; text-align: left; background: var(--soft); border: 1px solid transparent; border-radius: 7px; padding: 8px 10px; cursor: pointer; font: inherit; color: inherit; width: 100%; }
+.row:hover, .row:focus-visible, .row.active { border-color: var(--link); outline: none; }
+.row .n { font-weight: 600; display: block; }
+.row .n::before { content: "/"; color: var(--link); margin-right: 2px; }
+.row .g { color: var(--muted); font-size: 12.5px; display: block; }
+.tags { display: flex; gap: 4px; align-items: center; }
+.t { font-size: 11px; font-weight: 600; border-radius: 999px; padding: 1px 7px; white-space: nowrap; border: 1px solid var(--line); color: var(--muted); font-variant-numeric: tabular-nums; }
+.t.new { background: var(--new-bg); color: var(--new); border-color: transparent; }
+.more { background: none; border: 0; color: var(--link); font: 600 13px var(--f-ui); cursor: pointer; justify-self: start; padding: 4px 2px; }
+.empty { color: var(--muted); font-size: 12.5px; padding: 6px 2px; }
+.preview { border-top: 1px solid var(--line); padding-top: 10px; display: grid; gap: 4px; }
+.lbl { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.preview .txt { font-size: 13px; }
+.howto { border-top: 1px solid var(--line); padding-top: 10px; display: grid; gap: 6px; }
+.howto ol { margin: 0; padding-left: 18px; display: grid; gap: 3px; font-size: 13px; color: var(--ink); }
+.howto code { font-family: var(--f-mono); font-size: 12px; background: var(--soft); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; }
+.cmprow { display: flex; justify-content: flex-end; }
+.cmprow button { background: none; border: 0; color: var(--link); font: 600 12.5px var(--f-ui); cursor: pointer; padding: 0; }
+.today { display: grid; gap: 2px; }
+.today div { padding: 6px 10px; font-size: 14px; }
+.marker { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: var(--marker); color: #fff; font: 700 11px var(--f-ui); flex: none; }
+
+.notes { background: var(--canvas); border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: grid; gap: 14px; min-width: 0; }
+.notes h2 { margin: 0; font-size: 18px; }
+.note { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; align-items: start; }
+.note h3 { margin: 0; font-size: 14px; }
+.note p { margin: 2px 0 0; color: var(--muted); }
+.note p b { color: var(--ink); }
+.who { font-size: 11px; font-weight: 700; color: var(--link); text-transform: uppercase; letter-spacing: .05em; }
+.later { color: var(--muted); }
+pre { font-family: var(--f-mono); font-size: 12px; background: var(--soft); border: 1px solid var(--line); border-radius: 8px; padding: 10px; overflow-x: auto; margin: 6px 0 0; color: var(--ink); }
+.cmp { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; vertical-align: top; padding: 7px 8px; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-size: 11.5px; text-transform: uppercase; letter-spacing: .05em; }
+</style>
+
+<div class="wrap">
+  <div class="top">
+    <h1>Grouped Ask Starters</h1>
+    <p>Prototype of the "/Starters" panel in the Exec Dashboard Ask box. Two tabs, <b>Cross-account</b> first, then <b>Account</b>. A starter lands in the ask bar with the part to fill in brackets. Which starters appear follows the person's role. Click a starter, or type <b>/</b> in the ask bar.</p>
+    <div class="protobar">
+      <span class="protolabel">Prototype only, not in the product: preview as</span>
+      <div class="seg" role="group" aria-label="Preview as user type" id="roleSeg">
+        <button type="button" data-role="user" aria-pressed="true">User</button>
+        <button type="button" data-role="manager" aria-pressed="false">Manager</button>
+        <button type="button" data-role="admin" aria-pressed="false">Admin</button>
+      </div>
+      <span class="marker" title="Note 1">1</span>
+    </div>
+  </div>
+  <div class="layout">
+    <div class="app" aria-label="Prototype of the Exec Dashboard Ask box">
+      <div class="rail" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="main">
+        <div class="dash-title">Executive dashboard</div>
+        <div>
+          <span class="badge">Try the new AMA!</span>
+          <div class="askbox">
+            <div id="input" class="input" contenteditable="true" role="textbox" aria-label="Ask bar" data-placeholder="Ask anything, or type / for starters"></div>
+            <span class="marker" title="Note 3">3</span>
+            <button id="startersBtn" class="startersbtn" type="button" aria-expanded="true">/Starters</button>
+            <button id="send" class="send" type="button" disabled aria-label="Send">&#8593;</button>
+          </div>
+          <div id="hint" class="hint"></div>
+        </div>
+
+        <div id="panel" class="panel" role="dialog" aria-label="Starters">
+          <div class="panel-head">
+            <div class="tabs" role="tablist" aria-label="Starter groups">
+              <button type="button" class="tab" role="tab" data-tab="portfolio" aria-selected="true">Cross-account <span class="c" id="c-portfolio"></span></button>
+              <button type="button" class="tab" role="tab" data-tab="account" aria-selected="false">Account <span class="c" id="c-account"></span></button>
+              <span class="marker" title="Note 2">2</span>
+            </div>
+          </div>
+          <div id="tabsub" class="tabsub"></div>
+          <div id="list" class="list" role="tabpanel"></div>
+          <div class="howto">
+            <div class="lbl">How to use starters <span class="marker" title="Note 4" style="width:16px;height:16px;font-size:10px">4</span></div>
+            <ol>
+              <li>Type <code>/</code> plus a word (<code>/renewal</code>) and press Enter, or click a starter.</li>
+              <li>Replace the <span class="tok">[bracketed text]</span>, then send.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="notes" aria-label="Design notes">
+      <h2>Design notes for Omri and Gilad</h2>
+      <div class="note"><span class="marker">1</span><div><div class="who">Frontend + backend</div><h3>The role picks the list; there is no switch</h3><p>Show the starters for the person's Staircase role (<b>User</b>, <b>Manager</b>, <b>Admin</b>) from the starter config. The dashed control above the mock is only for previewing each role. Later, not MVP: admins could see every starter.</p></div></div>
+      <div class="note"><span class="marker">2</span><div><div class="who">Frontend</div><h3>Two button tabs, Cross-account first</h3><p>Cross-account opens by default because the Exec Dashboard is a cross-account surface. Account holds the one-account starters (prep, catch up, risk, handoff). Three starters show per tab; the rest sit behind Show more. The count on each tab is the total. No search box: typing / in the ask bar does the finding.</p></div></div>
+      <div class="note"><span class="marker">3</span><div><div class="who">Frontend</div><h3>Brackets mark what to fill</h3><p>A starter lands in the ask bar with <b>[write the account name]</b> or <b>[teammate name, tier or all accounts]</b> selected, so typing replaces it. Send stays off while a bracket is left. The text in the bar is exactly what runs; there is no hidden prompt.</p></div></div>
+      <div class="note"><span class="marker">4</span><div><div class="who">Frontend</div><h3>Slash commands and short instructions</h3><p>Typing <b>/</b> opens the panel and filters it as you type (<b>/ren</b> shows the renewal starters); Enter picks the top match. Two plain steps sit at the bottom of the panel. The full text of every starter is in the engineering spec, not in the panel.</p></div></div>
+      <div class="note"><span class="marker">5</span><div><div class="who">Backend</div><h3>Starters as config, not code</h3><p>Serve the list from a config so PM can change wording without a deploy, and hide a starter in an org where its fields are empty (no risk levels, no expansion analysis).</p>
+<pre>{
+  "name": "Renewal game plan",
+  "tab": "cross_account",     // or "account"
+  "roles": ["user"],
+  "tier": "core",             // core shows; more sits behind Show more
+  "template": "Sort active accounts for [teammate name, tier or all accounts] renewing in the next 90 days ...",
+  "requires": ["customer.risk.risk_level", "expansion_opportunity"]
+}</pre></div></div>
+      <div class="note later"><span class="marker" style="background:var(--muted)">6</span><div><div class="who" style="color:var(--muted)">Later, not MVP</div><h3>Pickers in place of brackets</h3><p>An account typeahead that fills the bracket and sends <b>scope.account_ids</b> (already in the request contract), and a scope chip for me, a teammate, a tier or all accounts. Brackets ship first; pickers replace them later with no change to the starter text.</p></div></div>
+      <div class="cmp">
+        <table>
+          <thead><tr><th>Today</th><th>Proposed MVP</th></tr></thead>
+          <tbody>
+            <tr><td>7 chips, one flat list</td><td>Cross-account and Account tabs, 3 visible each; the list follows the role</td></tr>
+            <tr><td>Report names ("Scan", "Watchlist")</td><td>Plain names, plus what you get</td></tr>
+            <tr><td>Portfolio only</td><td>Cross-account and account</td></tr>
+            <tr><td>Scope implied, nothing to fill</td><td>A bracket says what to write</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+const DATA = {"default_scope":{"user":"mine","manager":"all","admin":"all"},"roles":{"user":{"account":[{"name":"Prep my call","tier":"core","get":"Where you left off, what each side owes, risks to be ready for, wins to raise, who's who, and 3 dated talking points","template":"Prep me for my next call with {account}. Where did we leave off, what do we owe them and what do they owe us, and what risk should I be ready for, including any churn risk detected? Which recent wins can I bring up, and who are the key people and where does each stand? Give me 3 talking points, each tied to a dated conversation.","new":false,"picker":"account"},{"name":"Catch me up","tier":"core","get":"The 3 to 5 dated developments of the last 90 days, how their tone toward us changed, open asks, risk state, and one next move","template":"Catch me up on {account} over the last 90 days. Give me the 3 to 5 developments that matter most, each with its date and source, what changed in how they talk about us and why, and any open asks on either side. Tell me the risk level (or that none is assessed) and whether churn risk is detected, then the one thing to do next.","new":false,"picker":"account"},{"name":"Risk and save plan","tier":"core","get":"Risk level and churn state from the record, the top 3 drivers in their words, a saveability call, and a 30-day save plan","template":"Is {account} at risk? Take the risk level and health from the account record (say if there is no assessment), tell me whether churn risk is detected, and give the top 3 drivers in the customer's words, with dates. Then judge how saveable it is: a senior contact still engaged, a recent positive moment, and days left before renewal. End with a 30-day save plan.","new":false,"picker":"account"},{"name":"Taking over an account","tier":"more","get":"A handoff brief: why they bought, key people and stances, dated wins and problems, commitments, risk, and your first 5 moves","template":"I'm taking over {account}. Give me a handoff brief: why they bought and what they want to achieve (say if the record does not show it), the key people (champion, decision maker, anyone pushing back) and where each stands, dated wins and problems from the last 90 days, open commitments on both sides, the risk level, whether churn risk is detected, and my first 5 moves.","new":false,"picker":"account"},{"name":"Stakeholder map","tier":"more","get":"The 10 most engaged contacts, tagged versus real decision maker, who left or went quiet, where you are single-threaded, and 2 people to reach","template":"Who matters at {account}? List the 10 most recently engaged contacts with role and last engaged date. Name who is tagged decision maker and who actually approves things in recent conversations, and flag anyone on their side who left, changed role or went quiet in the last 90 days. Then tell me where we are single-threaded and the 2 people to reach next, and why.","new":false,"picker":"account"},{"name":"Draft my follow-up","tier":"more","get":"A short warm follow-up email built from your latest meeting or thread, with the checklist and the sources it used","template":"Draft a follow-up email to {account} from my most recent meeting or email thread. First list what it must cover: open items, commitments on both sides, any concern to acknowledge. Then write it short and warm, in my voice, with clear next steps. Leave out pricing, ARR and renewal dates, and show me the conversations you used.","new":false,"picker":"account"},{"name":"Renewal readiness","tier":"more","get":"Renewal date and ARR checked against the latest renewal emails, what was said and by whom, a verdict, and 3 moves","template":"How ready is {account} to renew? Give me the renewal date and ARR on record, and flag it if the date has passed or the latest renewal emails say something different. Add risk level, health, and what was said about the renewal in the last 90 days and by whom. Call it likely to renew, at risk, or room to grow, and give me 3 moves before the renewal.","new":false,"picker":"account"}],"portfolio":[{"name":"Renewal game plan","tier":"core","get":"Your next 90 days of renewals in three groups, with the at-risk ones judged for turnaround and a play on each","template":"Sort active accounts for {scope} renewing in the next 90 days into at risk (risk level 4 or 5, churn risk detected, or a non-renewal notice in conversations), upsell potential (expansion readiness 4 or 5), and no risk signal, at risk first. For the 10 largest at risk, which can I still turn around (senior contact engaged in 60 days, recent win, time left), and what should I do on each?","new":false,"picker":"scope"},{"name":"Expansion plays","tier":"core","get":"Every expansion opportunity in your book by category, which are ready, developing or blocked, and the 5 to work now","template":"Show the AI-detected expansion opportunities on active accounts for {scope}, grouped by category (up-sell, cross-sell, seat growth, platform expansion, services). Mark each ready to advance (high confidence, heating, and budget approved or technically validated), developing, or blocked. For the 5 strongest, give the offering, decision maker, timeline and user count, my next move, and flag any account renewing in the next 90 days.","new":false,"picker":"scope"},{"name":"Risks I'm missing","tier":"core","get":"Accounts whose health score hides real risk or a quiet renewal, what the score misses, and whether conversations confirm it or the flag is stale","template":"Which active accounts for {scope} carry risk the health score is missing? Give me two groups: churn risk detected or risk level 4 or 5 while health is High or Average, and renewals in the next 120 days with no touch in 30 days. Top 10 by ARR with what the score is missing on each. For the top 5, check recent conversations: is the risk real or is the flag out of date?","new":false,"picker":"scope"},{"name":"Advocates to ask","tier":"more","get":"Accounts in your book that praised you in the last 90 days, their words and dates, and the 3 best people to ask, with what to confirm first","template":"Which active accounts for {scope} had exceptional positive events in the last 90 days? List the top 10 by ARR with what happened, when, and the customer's words, naming the speaker only when the message shows it. Then rank the 3 strongest advocate candidates, favoring no risk level 4 or 5, no churn risk and no open problem in recent conversations. Say what to ask each for and what to confirm first.","new":false,"picker":"scope"}]},"manager":{"account":[{"name":"Executive briefing","tier":"core","get":"A one-screen brief before an executive conversation: standing, risk, their asks, commitments and what to say","template":"Brief me on {account} before I meet their executives: where the relationship stands, the risk level and whether churn risk is detected, what they have told us they need, open commitments on both sides, and the 3 things I should say. Keep it to one screen.","new":true,"picker":"account"},{"name":"Escalation review","tier":"core","get":"A dated timeline of what went wrong, who is involved, promises kept or missed, and a recovery plan","template":"{account} is escalating. Give me a dated timeline of what went wrong in the last 90 days, who on their side is involved and how they feel, what we promised and whether we delivered, and the recovery plan you recommend.","new":true,"picker":"account"},{"name":"Catch me up","tier":"core","get":"The 3 to 5 dated developments of the last 90 days, how their tone toward us changed, open asks, risk state, and one next move","template":"Catch me up on {account} over the last 90 days. Give me the 3 to 5 developments that matter most, each with its date and source, what changed in how they talk about us and why, and any open asks on either side. Tell me the risk level (or that none is assessed) and whether churn risk is detected, then the one thing to do next.","new":false,"picker":"account"},{"name":"Risk and save plan","tier":"more","get":"Risk level and churn state from the record, the top 3 drivers in their words, a saveability call, and a 30-day save plan","template":"Is {account} at risk? Take the risk level and health from the account record (say if there is no assessment), tell me whether churn risk is detected, and give the top 3 drivers in the customer's words, with dates. Then judge how saveable it is: a senior contact still engaged, a recent positive moment, and days left before renewal. End with a 30-day save plan.","new":false,"picker":"account"}],"portfolio":[{"name":"Renewal forecast","tier":"core","get":"Next 90 days of active renewals by tier in three groups with count and ARR, then which of the 10 largest at risk can still be saved and where leadership steps in","template":"Break down active accounts for {scope} renewing in the next 90 days by tier into at risk (risk level 4 or 5, or churn risk detected), upsell potential (expansion readiness 4 or 5 with Heating momentum), and no risk signal, one group per account, with count and ARR. For the 10 largest at risk, check conversations for non-renewal notices, then say which we can still save and where leadership should step in.","new":false,"picker":"scope"},{"name":"Revenue at risk","tier":"core","get":"Total ARR at risk and how much renews in 90 days, then the 10 largest judged saveable, notice given or lost, with driver and where to step in","template":"How much ARR sits in active accounts for {scope} at risk level 4 or 5, and how much renews in the next 90 days? For the 10 largest, say whether each is saveable, has given notice (a churn event or a non-renewal email in the last 180 days), or looks lost, the main driver from the risk analysis, whether that analysis looks out of date, and where leadership should step in.","new":false,"picker":"scope"},{"name":"What's driving risk","tier":"core","get":"The 3 to 5 risk drivers that repeat across the 25 largest at-risk accounts, with count, ARR, examples, and the one fix worth the most ARR","template":"Read the risk analyses for the 25 largest active accounts for {scope} at risk level 4 or 5. Which 3 to 5 drivers repeat most, such as product issues, value perception, competitive pressure or stakeholder change? For each, give the account count, ARR and two example accounts, flag any analysis that looks out of date, then name the one fix that would protect the most ARR.","new":false,"picker":"scope"},{"name":"Expansion pipeline","tier":"more","get":"Expansion opportunities by category and tier, how many are ready, and the 10 on your largest accounts to push","template":"Break down AI-detected expansion opportunities on active accounts for {scope} by category and tier: how many opportunities and accounts in each, and how many are ready to advance (high confidence, heating, and budget approved or technically validated), developing or blocked. No dollar totals. Then list the 10 ready-to-advance opportunities on the largest accounts with offering, decision maker and timeline, and say where leadership should help.","new":false,"picker":"scope"},{"name":"Prep a 1:1","tier":"more","get":"One teammate's book in four numbers, a real win to open with, 3 accounts to raise and a coaching question for each","template":"Prep me for a 1:1 with {person}. Across {person}'s active accounts: count and ARR, accounts at risk level 4 or 5, renewals in the next 90 days, and accounts with no touch in 30 days. Open with one real win from the last 90 days, then the 3 accounts I should raise and one coaching question for each.","new":false,"picker":"person"},{"name":"Green but at risk","tier":"more","get":"Accounts that look healthy on the score but carry risk, the 10 largest with owner and driver, and the ones nobody will see coming","template":"Which active accounts for {scope} show High health but are at risk level 4 or 5 or have a churn risk insight? Give the count, then the top 10 by ARR with owner, renewal date and the risk driver. Tell me which ones the owner is least likely to see coming (no decision maker touch in 90 days, or a score that recent conversations contradict) and the first move for each.","new":false,"picker":"scope"},{"name":"Team workload","tier":"more","get":"Every owner's book, at-risk ARR and renewal load, who is over the line, and the accounts behind each flag","template":"Group active accounts for {scope} by account owner: account count, ARR, accounts at risk level 4 or 5, and renewals in the next 90 days. Show the 15 owners with the most at-risk ARR, flag anyone with more than 25 percent of their ARR at risk or 10 or more renewals in 90 days, and tell me where a manager should help first, naming the accounts behind each flag.","new":false,"picker":"scope"},{"name":"What renewing customers say","tier":"more","get":"What customers renewing in the next 90 days complain about most, what is growing, quotes from two accounts each, and what to fix first","template":"Across active accounts for {scope} renewing in the next 90 days, which topics carry the most negative mentions in the last 90 days, and which grew versus the 90 days before? Rank the top 5 with at least 20 negative mentions, showing accounts and growth. For the top 2, give two customer quotes from different accounts and what each topic tells us to fix before those renewals.","new":false,"picker":"scope"}]},"admin":{"account":[{"name":"Signal audit","tier":"core","get":"Every stored signal on one account side by side, which ones are out of date, and what to fix","template":"Audit the signals on {account}: risk level, churn risk insight, churn or churn risk events in the last 180 days, renewal date and the latest renewal analysis, health and sentiment. Which agree, which look out of date against recent conversations, and what should be fixed in the data?","new":true,"picker":"account"},{"name":"Account data check","tier":"core","get":"What is missing on one account's setup (owners, dates, channels, contacts, AI analyses) and how to fix it","template":"Check {account}'s data in Staircase: owner and CSM fields, renewal date, connected email and meetings in the last 30 days, human contacts and their roles, and whether an AI summary and risk analysis exist. List what is missing and how to fix it.","new":true,"picker":"account"}],"portfolio":[{"name":"What to automate","tier":"core","get":"Accounts and ARR behind every lifecycle event type and six key insights, then the 5 worth an automated CTA or alert, each with a trigger rule","template":"Across active accounts for {scope}, count accounts and ARR for each lifecycle event type in the last 90 days, and for the Churn Risk, No renewal discussion, No QBR, Account dark, No Reach-out to stakeholder and Expansion readiness Very High insights. Pick the 5 that most deserve an automated CTA or alert: real ARR, a clear owner action, firing on under half the book. Give the trigger rule for each.","new":false,"picker":"scope"},{"name":"Data health check","tier":"core","get":"Count and ARR for six data gaps that break Ask answers, the 10 largest affected accounts, and fixes ranked by impact","template":"Run a data health check on active accounts for {scope}: how many have no owner, no renewal date, a renewal date before today, no email connected, no meetings connected, or no AI summary? Give count and ARR for each, list the 10 largest accounts with any of these, and rank the fixes by how much they would improve what users get from Ask.","new":false,"picker":"scope"},{"name":"Renewal reminder rules","tier":"core","get":"Renewals with no renewal discussion by tier, timing and owner against book size, and a reminder rule: when it fires and who gets it","template":"Which active accounts for {scope} renew in the next 90 days and carry the No renewal discussion insight? Give count and ARR, split by tier, by days to renewal (0 to 30, 31 to 60, 61 to 90), and by account owner against each owner's total renewals in the window. Is it concentrated or spread? Recommend an automated reminder: when it fires and who gets it.","new":false,"picker":"scope"},{"name":"Contact coverage","tier":"more","get":"Contact coverage gaps by tier with ARR, the Unknown-role backlog, which gaps are tagging versus relationship, and the first process fix","template":"For active accounts for {scope}, break down contact coverage by tier: accounts with one or no human contacts, no Decision Maker stakeholder, and no Executive Sponsor stakeholder, with ARR for each. How many human contacts sit on the Unknown role, and how many accounts without a Decision Maker have one? Tell me which gaps are relationship problems versus tagging problems, and the one process fix to start with.","new":false,"picker":"scope"},{"name":"Topics to act on","tier":"more","get":"The 5 most negative topics with volume, accounts, negative rate and growth, each routed to product, enablement or process with an example","template":"Across active accounts for {scope} in the last 90 days, which topics with at least 100 mentions have the highest share of negative sentiment, and which grew most versus the prior 90 days? For the top 5, show mentions, accounts, negative rate and growth, then say whether each points to a product fix, an enablement need or a process change, with one short example each.","new":false,"picker":"scope"},{"name":"Expansion routing rules","tier":"more","get":"How AI-detected opportunities split by qualification, and the rules for what goes to sales, stays with the CSM or waits","template":"Across AI-detected expansion opportunities on active accounts for {scope}, count opportunities and accounts by category, confidence, momentum, budget status and technical status. Which combinations are qualified enough to route to sales automatically, which should stay with the CSM, and which should wait? Give a routing rule for each with its volume, and flag opportunities that are blocked or name a competitor.","new":false,"picker":"scope"},{"name":"Signals to double-check","tier":"more","get":"Accounts where churn signals disagree, count and ARR, the 10 largest in each group with dates, and which to fix first","template":"Find active accounts for {scope} where Staircase signals disagree, in two groups: a churn event in the last 180 days but no Churn Risk insight, and a Churn Risk insight with no risk level. Give count and ARR for each, then the 10 largest in each group with owner, latest churn event date and renewal date, and tell me which group to fix first and how.","new":false,"picker":"scope"},{"name":"Contact change alerts","tier":"more","get":"Accounts with a contact change in 30 days, the ones that matter (renewing or at risk), who changed on which side, and the alert play","template":"Which active accounts for {scope} had a farewell or organization personnel change event in the last 30 days? Give count and ARR, and flag the ones renewing in the next 180 days or at risk level 4 or 5. For the top 10 by ARR, say who changed and whether it was on the customer's side or our own team. Recommend the play an automated alert should start.","new":false,"picker":"scope"}]}},"bench":["Churn lessons","Wins for leadership","Risk flags compared","Reference-ready accounts","Where to expand","AI coverage by tier"]};
+const PH = { account: '[write the account name]', scope: '[teammate name, tier or all accounts]', person: '[teammate name]' };
+const state = { role: 'user', tab: 'portfolio', open: { account: false, portfolio: false }, q: '', hover: null };
+try { const r = localStorage.getItem('starters-role'); if (r && DATA.roles[r]) state.role = r; } catch (e) {}
+const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+function fill(t) {
+  return esc(t).replace(/\{(account|scope|person)\}/g, (m, k) => '<span class="tok">' + esc(PH[k]) + '</span>');
+}
+function items() { return DATA.roles[state.role][state.tab] || []; }
+function visible() {
+  const q = state.q.trim().toLowerCase();
+  const all = [];
+  ['portfolio', 'account'].forEach(g => (DATA.roles[state.role][g] || []).forEach((it, i) => all.push({ it, i, g })));
+  if (q) return all.filter(x => (x.it.name + ' ' + x.it.get).toLowerCase().includes(q));
+  return items().map((it, i) => ({ it, i, g: state.tab })).filter(x => state.open[state.tab] || x.it.tier === 'core');
+}
+function render() {
+  document.querySelectorAll('#roleSeg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.role === state.role)));
+  document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === state.tab && !state.q)));
+  ['portfolio', 'account'].forEach(g => { document.getElementById('c-' + g).textContent = (DATA.roles[state.role][g] || []).length; });
+  const sub = state.q ? 'Matches in both tabs' : state.tab === 'portfolio' ? 'Questions across many accounts: your book, a teammate, a tier or every account.' : 'Questions about one account.';
+  document.getElementById('tabsub').textContent = sub;
+  const v = visible();
+  const hiddenN = state.q ? 0 : items().filter(it => it.tier === 'more').length;
+  let html = v.length ? v.map(x => '<button type="button" class="row" data-g="' + x.g + '" data-i="' + x.i + '"><span style="min-width:0"><span class="n">' + esc(x.it.name) + '</span><span class="g">' + esc(x.it.get) + '</span></span><span class="tags">' + (x.it.new ? '<span class="t new">New</span>' : '') + '</span></button>').join('') : '<div class="empty">' + (items().length ? 'No starters match.' : 'No starters in this tab for this role yet.') + '</div>';
+  if (hiddenN) html += '<button type="button" class="more" data-more="1">' + (state.open[state.tab] ? 'Show fewer' : 'Show ' + hiddenN + ' more') + '</button>';
+  document.getElementById('list').innerHTML = html;
+}
+function selectFirstToken() {
+  const tok = document.querySelector('#input .tok'); if (!tok) return;
+  const r = document.createRange(); r.selectNodeContents(tok); const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+}
+function checkSend() {
+  const txt = document.getElementById('input').textContent;
+  const left = Object.values(PH).some(p => txt.includes(p));
+  document.getElementById('send').disabled = !txt.trim() || left || txt.trim().startsWith('/');
+  document.getElementById('hint').textContent = left ? 'Replace the bracketed part, then send.' : (txt.trim() && !txt.trim().startsWith('/') ? 'Ready to send.' : '');
+}
+function insert(g, i) {
+  const it = DATA.roles[state.role][g][i];
+  const input = document.getElementById('input');
+  input.innerHTML = fill(it.template);
+  input.focus(); selectFirstToken();
+  state.q = '';
+  document.getElementById('panel').hidden = true;
+  document.getElementById('startersBtn').setAttribute('aria-expanded', 'false');
+  checkSend();
+}
+document.addEventListener('click', e => {
+  const t = e.target.closest('button'); if (!t) return;
+  if (t.dataset.role) { state.role = t.dataset.role; state.open = { account: false, portfolio: false }; state.hover = null; try { localStorage.setItem('starters-role', state.role); } catch (x) {} render(); return; }
+  if (t.dataset.tab) { state.tab = t.dataset.tab; state.q = ''; state.hover = null; render(); return; }
+  if (t.dataset.more) { state.open[state.tab] = !state.open[state.tab]; render(); return; }
+  if (t.classList.contains('row')) { insert(t.dataset.g, +t.dataset.i); return; }
+  if (t.id === 'startersBtn') { const p = document.getElementById('panel'); p.hidden = !p.hidden; t.setAttribute('aria-expanded', String(!p.hidden)); return; }
+  if (t.id === 'send') { document.getElementById('hint').textContent = 'Prototype: this would send the text in the ask bar to Ask Staircase.'; return; }
+});
+const input = document.getElementById('input');
+input.addEventListener('input', () => {
+  const txt = input.textContent;
+  if (txt.startsWith('/')) { const p = document.getElementById('panel'); p.hidden = false; document.getElementById('startersBtn').setAttribute('aria-expanded', 'true'); state.q = txt.slice(1); state.hover = null; render(); }
+  else if (state.q) { state.q = ''; render(); }
+  checkSend();
+});
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && input.textContent.startsWith('/')) { e.preventDefault(); const v = visible(); if (v[0]) insert(v[0].g, v[0].i); }
+  else if (e.key === 'Enter') { e.preventDefault(); if (!document.getElementById('send').disabled) document.getElementById('send').click(); }
+});
+render();
+</script>
+
+</body>
+</html>
