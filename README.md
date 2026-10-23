@@ -15,6 +15,7 @@ prototypes/<name>/index.html        # Each prototype, served at /prototypes/<nam
 
 | Prototype | URL |
 |-----------|-----|
+| Acknowledge, Resolve or Dismiss (concept mockups) | https://gs-bbluhm.github.io/st-pm-prototypes/prototypes/insight-status/ |
 | Analyst Agents by Gainsight | https://gs-bbluhm.github.io/st-pm-prototypes/prototypes/staircase-agents-overview/ |
 
 ## Deploying a new prototype

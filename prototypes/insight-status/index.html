@@ -1,0 +1,374 @@
+<title>Insight Status Mockups</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a tabbed low-fi mockup deck. Frames mimic the existing Lifecycle Events report and account page Insights feed; one accent, status colors carry meaning. */
+:root{
+  --bg:#f4f6fa; --surface:#ffffff; --surface-2:#eef1f7; --line:#d9deea; --line-strong:#b9c1d3;
+  --fg:#1c2433; --muted:#5d6880; --accent:#0369e9; --accent-soft:#e3eefd;
+  --good:#17803d; --good-soft:#e1f4e7; --neg:#c62828; --neg-soft:#fbe6e6; --avg:#9a6b00; --avg-soft:#fdf1d1;
+  --shadow:0 8px 30px rgba(20,30,60,.18); --font:'Noto Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12161f; --surface:#1a2030; --surface-2:#232b3e; --line:#2d374d; --line-strong:#43506b;
+  --fg:#e7ebf4; --muted:#9aa5bd; --accent:#5aa2ff; --accent-soft:#1c2c47;
+  --good:#5fd08a; --good-soft:#173324; --neg:#ff7b7b; --neg-soft:#3a1d1f; --avg:#f2c45a; --avg-soft:#3a2f12;
+  --shadow:0 8px 30px rgba(0,0,0,.5); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12161f; --surface:#1a2030; --surface-2:#232b3e; --line:#2d374d; --line-strong:#43506b;
+  --fg:#e7ebf4; --muted:#9aa5bd; --accent:#5aa2ff; --accent-soft:#1c2c47;
+  --good:#5fd08a; --good-soft:#173324; --neg:#ff7b7b; --neg-soft:#3a1d1f; --avg:#f2c45a; --avg-soft:#3a2f12;
+  --shadow:0 8px 30px rgba(0,0,0,.5); color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);font-size:14px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+h1{font-size:22px;margin:0;font-weight:700;text-wrap:balance}
+h2{font-size:16px;margin:0 0 4px;font-weight:600}
+p{margin:0}
+.lede{color:var(--muted);max-width:75ch}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:0}
+.tab{font:inherit;background:none;border:0;border-bottom:3px solid transparent;padding:8px 12px;color:var(--muted);cursor:pointer;font-weight:500}
+.tab[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.tab:focus-visible,.btn:focus-visible,.iconbtn:focus-visible,.chipbtn:focus-visible,.opt:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.panel[hidden]{display:none}
+.note-box{background:var(--accent-soft);border:1px solid var(--line);border-radius:6px;padding:10px 14px;color:var(--fg)}
+.note-box b{font-weight:600}
+.frame{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.frame-title{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
+.frame-title span{color:var(--muted);font-size:12px}
+.annot{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.annot div{border:1px dashed var(--line-strong);border-radius:6px;padding:8px 10px;font-size:13px;color:var(--muted)}
+.annot b{display:block;color:var(--fg);font-weight:600;margin-bottom:2px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pill{border:1px solid var(--line);background:var(--surface-2);border-radius:999px;padding:4px 12px;font-size:13px;color:var(--fg)}
+.pill.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.chipbtn{font:inherit;cursor:pointer}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;min-width:900px;font-size:13px}
+th{background:var(--surface-2);text-align:left;font-weight:600;padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+td.num{white-space:nowrap}
+.acct{display:flex;align-items:center;gap:8px}
+.avatar{width:26px;height:26px;border-radius:50%;background:var(--line);display:grid;place-items:center;font-size:11px;font-weight:600;color:var(--muted);flex:none}
+.link{color:var(--accent)}
+.sig{display:flex;flex-wrap:wrap;gap:4px 10px;color:var(--muted)}
+.actions{display:flex;gap:6px;justify-content:flex-end}
+.iconbtn{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--muted);display:grid;place-items:center;cursor:pointer;padding:0}
+.iconbtn:hover{border-color:var(--accent);color:var(--accent)}
+.iconbtn.new{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.iconbtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;white-space:nowrap}
+.badge i{width:7px;height:7px;border-radius:50%;background:currentColor;display:inline-block}
+.b-open{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+.b-ack{background:var(--accent-soft);color:var(--accent)}
+.b-res{background:var(--good-soft);color:var(--good)}
+.b-dis{background:var(--surface-2);color:var(--muted);border:1px dashed var(--line-strong)}
+.meta{display:block;color:var(--muted);font-size:12px;margin-top:2px;font-weight:400}
+.hasnote{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.btn{font:inherit;border-radius:999px;border:1px solid var(--line-strong);background:var(--surface);color:var(--fg);padding:7px 16px;cursor:pointer;font-weight:500}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:disabled{opacity:.45;cursor:not-allowed}
+.btn.quiet{border-color:transparent;color:var(--accent);padding-inline:8px}
+.scrim{position:fixed;inset:0;background:rgba(10,16,30,.5);display:grid;place-items:center;padding:16px;z-index:20}
+.scrim[hidden]{display:none}
+.modal{background:var(--surface);border-radius:14px;box-shadow:var(--shadow);width:min(520px,100%);max-height:92vh;overflow:auto;padding:20px;display:flex;flex-direction:column;gap:14px}
+.modal h3{margin:0;font-size:17px}
+.ctx{background:var(--surface-2);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--muted)}
+.ctx b{color:var(--fg);font-weight:600}
+.opts{display:grid;gap:8px}
+.opt{display:grid;grid-template-columns:20px 1fr;gap:10px;text-align:left;font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer}
+.opt .dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--line-strong);margin-top:2px}
+.opt[aria-checked="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.opt[aria-checked="true"] .dot{border-color:var(--accent);background:radial-gradient(var(--accent) 0 45%,transparent 50%)}
+.opt strong{display:block;font-weight:600}
+.opt span{color:var(--muted);font-size:13px}
+label.f{font-weight:600;font-size:13px;display:block;margin-bottom:4px}
+textarea{width:100%;min-height:84px;resize:vertical;font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line-strong);border-radius:8px;padding:8px 10px}
+.help{color:var(--muted);font-size:12px;margin-top:4px}
+.foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
+.foot .r{display:flex;gap:8px}
+.warnlink{font-size:12px;color:var(--muted)}
+.warnlink b{color:var(--neg);font-weight:600}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--surface);min-width:0}
+.ins{border-top:1px solid var(--line);padding:12px 0;display:grid;grid-template-columns:20px 1fr auto;gap:10px;align-items:start}
+.ins:first-of-type{border-top:0}
+.ins .red{width:9px;height:9px;border-radius:50%;background:var(--neg);margin-top:7px}
+.ins small{display:block;color:var(--muted);font-size:13px}
+.ins .rec{margin-top:6px;font-size:13px}
+.ins .rec b{font-weight:600}
+.ins .stack{display:flex;gap:6px}
+.hist{margin-top:8px;font-size:12px;color:var(--muted);border-left:2px solid var(--line);padding-left:10px}
+.bar{height:10px;border-radius:99px;background:var(--surface-2);overflow:hidden;display:flex}
+.bar span{display:block;height:100%}
+.bar .a{background:var(--accent)}
+.bar .o{background:var(--neg)}
+.big{font-size:28px;font-weight:700;line-height:1.1}
+.rowflex{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+ul.clean{margin:0;padding-left:18px;display:grid;gap:6px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.tag{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.flow{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch}
+.step{flex:1 1 150px;border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--surface-2);font-size:13px}
+.step b{display:block;margin-bottom:2px}
+.arrow{align-self:center;color:var(--muted)}
+.email{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--surface);max-width:360px;font-size:13px}
+@media (max-width:560px){.arrow{display:none}}
+@media (prefers-reduced-motion:no-preference){.modal{animation:pop .14s ease-out}@keyframes pop{from{transform:translateY(6px);opacity:.6}to{transform:none;opacity:1}}}
+</style>
+
+<div class="wrap">
+  <div>
+    <div class="tag">Low-fi mockup · Proposed, not decided</div>
+    <h1>Acknowledge, resolve or dismiss an insight or event</h1>
+    <p class="lede">One action, three outcomes, an optional note. It sits where leaders already work: the Lifecycle Events report, the Insights report and the account page Insights feed. Sample data only. Click through the frames; the action buttons work.</p>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="Mockup frames">
+    <button class="tab" role="tab" aria-selected="true" data-tab="report" id="t-report">Events report</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="account" id="t-account">Account page</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="states" id="t-states">States and counts</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="flow" id="t-flow">Email to action</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="beyond" id="t-beyond">Beyond MVP</button>
+  </div>
+
+  <!-- REPORT -->
+  <section class="panel" id="p-report">
+    <div class="frame">
+      <div class="frame-title"><h2>Reports / Lifecycle Events</h2><span>Same layout as today, plus a Status column, a status filter and one new button beside delete</span></div>
+      <div class="toolbar" id="filters" aria-label="Status filter">
+        <span class="pill">Last 14 days</span>
+        <span class="pill">Advanced filter (1)</span>
+        <span class="tag" style="margin-left:8px">Status</span>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Date</th><th>Account</th><th>Event</th><th>Communication type</th><th>Signals</th><th>Status</th><th style="text-align:right">Actions</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <div class="annot">
+        <div><b>New: status button</b>Check-circle icon sits left of the delete icon. Opens the pop-up. Tooltip: "Acknowledge, resolve or dismiss".</div>
+        <div><b>New: Status column</b>Chip, who, and when in relative time. A note icon shows the note on hover.</div>
+        <div><b>New: status filter</b>Defaults to Open and Acknowledged, so the weekly working list hides handled items. Resolved and Dismissed are one click away.</div>
+        <div><b>Unchanged: delete</b>Delete still tells Staircase the detection was wrong and feeds tuning. The pop-up says so.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACCOUNT -->
+  <section class="panel" id="p-account" hidden>
+    <div class="frame">
+      <div class="frame-title"><h2>Account page / Insights</h2><span>Existing email icon stays; the same status button sits beside it</span></div>
+      <div class="grid2">
+        <div class="card">
+          <h2>Insights</h2>
+          <div id="insfeed"></div>
+        </div>
+        <div class="card">
+          <h2>Notes</h2>
+          <p class="help" style="margin-bottom:8px">A note saved from the pop-up appears here and names the insight it belongs to.</p>
+          <div id="notes"></div>
+        </div>
+      </div>
+      <div class="annot">
+        <div><b>Same pop-up everywhere</b>One component for the Events report, the Insights report and this feed.</div>
+        <div><b>Note lands in Notes</b>Each note shows a line such as "On: No reach-out to stakeholder". This is the link-a-note-to-an-event work.</div>
+        <div><b>Re-fired insight</b>A new firing starts Open. The earlier decision stays in a collapsed history line.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATES -->
+  <section class="panel" id="p-states" hidden>
+    <div class="cols">
+      <div class="frame">
+        <h2>The four states</h2>
+        <div class="grid2" style="grid-template-columns:1fr">
+          <div class="rowflex"><span class="badge b-open"><i></i>Open</span><span>Fired, nobody has responded. Counted, on the working list.</span></div>
+          <div class="rowflex"><span class="badge b-ack"><i></i>Acknowledged</span><span>Seen, being worked. Stays counted and on the list.</span></div>
+          <div class="rowflex"><span class="badge b-res"><i></i>Resolved</span><span>Handled by a person. Leaves the working list, counts as a win.</span></div>
+          <div class="rowflex"><span class="badge b-dis"><i></i>Dismissed</span><span>Signal was right, nothing to do. Reviewable later.</span></div>
+        </div>
+        <p class="help">Open is neutral gray, not a warning color. Resolved is the only green.</p>
+      </div>
+      <div class="frame">
+        <h2>Dashboard card with counts</h2>
+        <p class="help">At-risk revenue never drops when someone acknowledges. The split shows who is engaged.</p>
+        <div class="big">54 at risk</div>
+        <div class="bar" role="img" aria-label="32 of 54 acknowledged"><span class="a" style="width:59%"></span><span class="o" style="width:41%"></span></div>
+        <div class="rowflex"><span class="badge b-ack"><i></i>32 acknowledged</span><span class="badge b-open"><i></i>22 open</span><span class="meta">$1.8M at risk, unchanged</span></div>
+      </div>
+      <div class="frame">
+        <h2>A new firing starts Open</h2>
+        <div class="ins" style="grid-template-columns:20px 1fr auto">
+          <span class="red"></span>
+          <div><strong>No reach-out to stakeholder</strong><small>Fired again 10/23. Last decision shown below.</small>
+            <span class="badge b-open" style="margin-top:6px"><i></i>Open</span>
+            <div class="hist">History: Acknowledged by Dana, 10/09 ("Calling Thursday") · Resolved by Dana, 10/12</div></div>
+          <span></span>
+        </div>
+      </div>
+      <div class="frame">
+        <h2>Empty and error states</h2>
+        <ul class="clean">
+          <li><b>Nothing open:</b> "Nothing needs attention. 41 resolved this month." with a link to the resolved list.</li>
+          <li><b>Save fails:</b> "Your note was not saved. Check your connection and try again." The text stays in the box.</li>
+          <li><b>No permission:</b> button is disabled with the tooltip "Ask an admin for access to change status."</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLOW -->
+  <section class="panel" id="p-flow" hidden>
+    <div class="frame">
+      <h2>From the email notification to a recorded decision</h2>
+      <div class="flow">
+        <div class="step"><b>1. Email arrives</b>"Extremely negative message on Acme Logistics" with a View event button.</div>
+        <span class="arrow">→</span>
+        <div class="step"><b>2. Lands on the event</b>Not the home page. The status pop-up is open with the note box focused.</div>
+        <span class="arrow">→</span>
+        <div class="step"><b>3. Choose and note</b>Acknowledged, "Calling the admin at 2pm."</div>
+        <span class="arrow">→</span>
+        <div class="step"><b>4. Everyone sees it</b>Chip on the event, note in account Notes, count on the dashboard card.</div>
+      </div>
+      <div class="email">
+        <div class="tag">Email preview</div>
+        <p style="margin:6px 0"><b>Extremely negative message</b><br>Acme Logistics, 10/23. "We have not heard back in two weeks."</p>
+        <span class="btn primary" style="display:inline-block">View event and respond</span>
+      </div>
+      <p class="help">The leader workflow: get the alert, then look for a note to know someone has it.</p>
+    </div>
+  </section>
+
+  <!-- BEYOND -->
+  <section class="panel" id="p-beyond" hidden>
+    <div class="cols">
+      <div class="frame">
+        <h2>MVP</h2>
+        <ul class="clean">
+          <li>Status action and pop-up on Events report, Insights report, account Insights feed, email deep link</li>
+          <li>Four states, who and when, optional note that also lands in Notes</li>
+          <li>Status filter and column in both reports; counts split on dashboard cards</li>
+          <li>New firing starts Open; earlier decision kept in history</li>
+          <li>Reopen from any state</li>
+        </ul>
+      </div>
+      <div class="frame">
+        <h2>Soon after</h2>
+        <ul class="clean">
+          <li><b>Bulk action.</b> Select rows in a report and acknowledge or resolve together. The weekly working list needs it.</li>
+          <li><b>@mention in the note</b> to hand an item to a teammate (Notes @mention request).</li>
+          <li><b>Reason on dismiss</b> from a short list (not relevant, already handled, expected) for later review.</li>
+          <li><b>Resolved report</b> with win counts: risks closed, time to resolve, saved revenue.</li>
+        </ul>
+      </div>
+      <div class="frame">
+        <h2>Later, with AI</h2>
+        <ul class="clean">
+          <li><b>Suggested resolution.</b> "The customer replied positively on 10/22. Mark resolved?" A person confirms. Human in the loop.</li>
+          <li><b>Auto-clear when the cause clears,</b> for example the stakeholder gets contacted, shown as "Resolved automatically" and reopenable.</li>
+          <li><b>Aging nudge.</b> "Acknowledged 7 days ago, no update" prompts the owner.</li>
+          <li><b>Notification quieting.</b> Skip repeat alerts on acknowledged items; send a digest of unacknowledged ones.</li>
+          <li><b>Agents and Ask Staircase read status and notes</b> so answers say what the team already decided.</li>
+          <li><b>MCP can set status</b> with the same note.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- MODAL -->
+<div class="scrim" id="scrim" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mt">
+    <h3 id="mt">Update status</h3>
+    <div class="ctx" id="ctx"></div>
+    <div class="opts" role="radiogroup" aria-label="Status">
+      <button class="opt" role="radio" aria-checked="false" data-s="ack"><span class="dot"></span><div><strong>Acknowledged</strong><span>We have seen this and are working on it. Stays open and counted.</span></div></button>
+      <button class="opt" role="radio" aria-checked="false" data-s="res"><span class="dot"></span><div><strong>Resolved</strong><span>Handled. Leaves the working list and counts as a win.</span></div></button>
+      <button class="opt" role="radio" aria-checked="false" data-s="dis"><span class="dot"></span><div><strong>Dismissed</strong><span>The signal was right and needs no action. You can review it later.</span></div></button>
+    </div>
+    <div>
+      <label class="f" for="note">Note <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
+      <textarea id="note" placeholder="What are you doing about it? Anyone opening this will see it."></textarea>
+      <p class="help" id="notehelp">Saved to the account's Notes, linked to this item.</p>
+    </div>
+    <div class="foot">
+      <span class="warnlink"><b>Wrong detection?</b> Delete the item instead so Staircase learns from it.</span>
+      <div class="r"><button class="btn quiet" id="reopen" hidden>Reopen</button><button class="btn" id="cancel">Cancel</button><button class="btn primary" id="save" disabled>Save</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var LABEL={open:'Open',ack:'Acknowledged',res:'Resolved',dis:'Dismissed'};
+  var CLS={open:'b-open',ack:'b-ack',res:'b-res',dis:'b-dis'};
+  var rows=[
+    {id:'e1',date:'10/23/2026',acct:'Acme Logistics',ini:'AL',event:'Account personnel changes',type:'Email',sig:['Contact change request','Handover discussion','Role transition'],s:'open'},
+    {id:'e2',date:'10/23/2026',acct:'Northwind Retail',ini:'NR',event:'Commercial discussion',type:'Email',sig:['Contract rightsizing','Pricing/terms negotiation','Renewal explicitly mentioned'],s:'ack',by:'Dana',when:'2h ago',note:'Calling the admin at 2pm.'},
+    {id:'e3',date:'10/23/2026',acct:'Globex Care',ini:'GC',event:'Highly positive message',type:'Email',sig:['Enthusiastic gratitude','Team recognition'],s:'open'},
+    {id:'e4',date:'10/22/2026',acct:'Initech Security',ini:'IS',event:'Extremely negative message',type:'Phone call',sig:['Explicit exit intent'],s:'res',by:'Sam',when:'1d ago',note:'Escalated to support lead, credit issued.'},
+    {id:'e5',date:'10/22/2026',acct:'Umbrella Systems',ini:'US',event:'Churn risk',type:'Email',sig:['Explicit exit intent'],s:'dis',by:'Lee',when:'2d ago',note:'Known pilot ending, not a risk.'}
+  ];
+  var ins=[
+    {id:'i1',title:'No reach-out to stakeholder',text:'Stakeholder Alex Rivera has not been contacted over the touch frequency period',s:'open'},
+    {id:'i2',title:'No reach-out to stakeholder',text:'Stakeholder Jordan Blake has not been contacted over the touch frequency period',s:'ack',by:'Dana',when:'3h ago',note:'Meeting booked for Thursday.'},
+    {id:'i3',title:'No reach-out to stakeholder',text:'Stakeholder Casey Morgan has not been contacted over the touch frequency period',s:'open',hist:'History: Acknowledged by Dana, 10/09 · Resolved by Dana, 10/12. Fired again 10/23.'}
+  ];
+  var notes=[{on:'No reach-out to stakeholder (Jordan Blake)',by:'Dana',when:'3h ago',text:'Meeting booked for Thursday.'}];
+  var show={open:true,ack:true,res:false,dis:false};
+  var cur=null,choice=null;
+  var ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.8"/></svg>';
+  var TRASH='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>';
+  var MAIL='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>';
+  function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function badge(r){var h='<span class="badge '+CLS[r.s]+'"><i></i>'+LABEL[r.s]+'</span>';
+    if(r.s!=='open'){h+='<span class="meta">'+esc(r.by)+' · '+esc(r.when)+'</span>';if(r.note)h+='<span class="hasnote" title="'+esc(r.note)+'">Note: '+esc(r.note.length>34?r.note.slice(0,34)+'…':r.note)+'</span>'}
+    return h}
+  function renderFilters(){var el=document.getElementById('filters');
+    el.querySelectorAll('.chipbtn').forEach(function(n){n.remove()});
+    ['open','ack','res','dis'].forEach(function(k){var b=document.createElement('button');b.className='pill chipbtn'+(show[k]?' on':'');b.type='button';b.setAttribute('aria-pressed',show[k]);b.textContent=LABEL[k];
+      b.onclick=function(){show[k]=!show[k];renderFilters();renderRows()};el.appendChild(b)})}
+  function renderRows(){var tb=document.getElementById('rows');var vis=rows.filter(function(r){return show[r.s]});
+    if(!vis.length){tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:28px">No events match this status filter.</td></tr>';return}
+    tb.innerHTML=vis.map(function(r){return '<tr><td class="num">'+r.date+'</td><td><div class="acct"><span class="avatar">'+r.ini+'</span><span class="link">'+r.acct+'</span></div></td><td><span class="link">'+r.event+'</span></td><td>'+r.type+'</td><td><div class="sig">'+r.sig.map(function(s){return '<span>• '+s+'</span>'}).join('')+'</div></td><td>'+badge(r)+'</td><td><div class="actions"><button class="iconbtn new" title="Acknowledge, resolve or dismiss" aria-label="Acknowledge, resolve or dismiss '+r.acct+'" data-kind="row" data-id="'+r.id+'">'+ICON+'</button><button class="iconbtn" title="Delete: tells Staircase the detection was wrong" aria-label="Delete event" type="button">'+TRASH+'</button></div></td></tr>'}).join('')}
+  function renderIns(){document.getElementById('insfeed').innerHTML=ins.map(function(r){
+    return '<div class="ins"><span class="red"></span><div><strong>'+r.title+'</strong><small>'+r.text+'</small>'+
+      (r.s!=='open'?'<div style="margin-top:6px">'+badge(r)+'</div>':'<div style="margin-top:6px"><span class="badge b-open"><i></i>Open</span></div>')+
+      (r.hist?'<div class="hist">'+r.hist+'</div>':'')+
+      '<div class="rec"><b>Recommended action</b><br>Send an email or schedule a meeting with this stakeholder to engage them.</div></div>'+
+      '<div class="stack"><button class="iconbtn" title="Email" aria-label="Email stakeholder" type="button">'+MAIL+'</button><button class="iconbtn new" title="Acknowledge, resolve or dismiss" aria-label="Acknowledge, resolve or dismiss" data-kind="ins" data-id="'+r.id+'">'+ICON+'</button></div></div>'}).join('')}
+  function renderNotes(){var el=document.getElementById('notes');
+    el.innerHTML=notes.length?notes.map(function(n){return '<div style="border-top:1px solid var(--line);padding:10px 0"><div class="tag">On: '+esc(n.on)+'</div><div>'+esc(n.text)+'</div><span class="meta">'+esc(n.by)+' · '+esc(n.when)+'</span></div>'}).join(''):'<p class="help">No notes yet.</p>'}
+  function find(kind,id){return (kind==='row'?rows:ins).filter(function(r){return r.id===id})[0]}
+  function openModal(kind,id){cur={kind:kind,item:find(kind,id)};choice=cur.item.s==='open'?null:cur.item.s;
+    var name=kind==='row'?cur.item.acct+' · '+cur.item.event:cur.item.title;
+    document.getElementById('ctx').innerHTML='<b>'+esc(name)+'</b>'+(kind==='row'?' · '+cur.item.date:'');
+    document.getElementById('note').value=cur.item.note||'';
+    document.getElementById('reopen').hidden=cur.item.s==='open';
+    paint();document.getElementById('scrim').hidden=false;document.getElementById('note').focus()}
+  function paint(){document.querySelectorAll('.opt').forEach(function(o){o.setAttribute('aria-checked',o.dataset.s===choice)});document.getElementById('save').disabled=!choice}
+  function close(){document.getElementById('scrim').hidden=true;cur=null}
+  document.querySelectorAll('.opt').forEach(function(o){o.onclick=function(){choice=o.dataset.s;paint()}});
+  document.getElementById('cancel').onclick=close;
+  document.getElementById('scrim').addEventListener('click',function(e){if(e.target.id==='scrim')close()});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&cur)close()});
+  document.getElementById('save').onclick=function(){if(!cur||!choice)return;var it=cur.item,txt=document.getElementById('note').value.trim();
+    it.s=choice;it.by='You';it.when='just now';it.note=txt;
+    if(txt){notes.unshift({on:(cur.kind==='row'?it.event+' ('+it.acct+')':it.title),by:'You',when:'just now',text:txt});renderNotes()}
+    close();renderRows();renderIns()};
+  document.getElementById('reopen').onclick=function(){if(!cur)return;cur.item.s='open';delete cur.item.by;delete cur.item.when;close();renderRows();renderIns()};
+  document.addEventListener('click',function(e){var b=e.target.closest('[data-kind]');if(b)openModal(b.dataset.kind,b.dataset.id)});
+  var tabs=document.querySelectorAll('.tab');
+  function select(name){tabs.forEach(function(t){t.setAttribute('aria-selected',t.dataset.tab===name)});document.querySelectorAll('.panel').forEach(function(p){p.hidden=p.id!=='p-'+name})}
+  tabs.forEach(function(t){t.onclick=function(){select(t.dataset.tab)}});
+  var h=(location.hash||'').replace('#','');if(['report','account','states','flow','beyond'].indexOf(h)>-1)select(h);
+  renderFilters();renderRows();renderIns();renderNotes();
+})();
+</script>
