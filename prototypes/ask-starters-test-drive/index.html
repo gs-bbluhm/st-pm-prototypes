@@ -96,6 +96,8 @@ mark.ph{background:var(--ph-bg);color:var(--ph-ink);border-radius:4px;padding:0 
 .btn.primary{background:var(--coral);border-color:var(--coral);color:#fff}
 .btn.primary:hover{filter:brightness(.95)}
 .btn.link{border:0;background:none;color:var(--blue);padding:7px 4px}
+.btn.big{font-size:15px;padding:11px 24px;border-radius:10px}
+.out2{display:flex;flex-wrap:wrap;align-items:center;gap:2px 10px;margin-top:12px;font-size:13px;color:var(--muted)}
 .copied{font-size:12.5px;color:var(--ok);font-weight:600;min-height:1em}
 .watch{margin:12px 0 0;font-size:13.5px;color:var(--ink);background:var(--fill-bg);border-radius:9px;padding:8px 12px}
 .watch b{color:var(--fill-ink)}
@@ -172,19 +174,18 @@ mark.ph{background:var(--ph-bg);color:var(--ph-ink);border-radius:4px;padding:0 
 
   <section class="wrapup" aria-labelledby="wrapth">
     <h2 id="wrapth">Wrap up</h2>
-    <p class="sub">Anything we should add or change? Then copy your feedback and paste it into the office hours chat.</p>
+    <p class="sub">Anything we should add or change? Add it here, then submit your feedback.</p>
     <div class="grid2">
       <label class="f">Your name and company (optional)<input type="text" id="who" placeholder="Name, company" autocomplete="off"></label>
       <label class="f">Starters you would add, or questions you ask every week<textarea id="adds" placeholder="One per line"></textarea></label>
     </div>
     <div class="out">
-      <button class="btn primary" id="sendfb" hidden>Send my feedback</button>
-      <button class="btn" id="copyfb">Copy my feedback</button>
-      <button class="btn" id="dlfb">Download as text</button>
-      <button class="btn link" id="reset">Clear everything</button>
+      <button class="btn primary big" id="submitfb">Submit feedback</button>
       <span class="copied" id="fbmsg" role="status"></span>
     </div>
-    <p class="sub" id="sendnote" hidden style="margin:10px 0 0;font-size:13px">Send adds your ratings, tags and notes, plus the name you type above, to the Ask Starters feedback sheet. Nothing else is collected.</p>
+    <p class="sub" id="sendnote" style="margin:10px 0 0;font-size:13px"></p>
+    <textarea id="fbtext" readonly hidden aria-label="Feedback text to copy" style="margin-top:10px;min-height:140px;font-family:var(--f-mono);font-size:12.5px"></textarea>
+    <div class="out2"><span>Other ways:</span><button class="btn link" id="copyfb">Copy to clipboard</button><button class="btn link" id="dlfb">Download as text</button><button class="btn link" id="reset">Clear everything</button></div>
   </section>
 
   <p class="foot">Test notes on each starter come from runs in the Gainsight org on Oct 22 and are there to tell you what to watch for, not to promise a result. Your instance, data and timing will differ, which is exactly what we want to learn. Nothing you type here leaves your browser until you copy it yourself. Prompts use no customer data.</p>
@@ -310,7 +311,7 @@ function copyText(text, done){
   function fallback(){ var ta=document.createElement("textarea"); ta.value=text; ta.setAttribute("readonly",""); ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.select(); var ok=false; try{ok=document.execCommand("copy");}catch(e){} document.body.removeChild(ta); done(ok); }
   if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(function(){done(true);}, fallback); else fallback();
 }
-function flash(el, msg){ el.textContent=msg; setTimeout(function(){ el.textContent=""; }, 2600); }
+function flash(el, msg, ms){ el.textContent=msg; clearTimeout(el._t); el._t=setTimeout(function(){ el.textContent=""; }, ms||2600); }
 
 $("list").addEventListener("click", function(e){
   var t = e.target.closest("button"); if(!t) return;
@@ -353,23 +354,27 @@ function feedbackText(){
   if ((state.adds||"").trim()) { lines.push(""); lines.push("STARTERS I WOULD ADD"); state.adds.trim().split(/\n+/).forEach(function(l){ lines.push("- "+l.trim()); }); }
   return lines.join("\n");
 }
-$("copyfb").addEventListener("click", function(){ copyText(feedbackText(), function(ok){ flash($("fbmsg"), ok ? "Copied. Paste it into the office hours chat." : "Copy blocked. Use Download as text instead."); }); });
+function showBox(ft, ok){ var box=$("fbtext"); box.value=ft; box.hidden=ok; if(!ok){ box.focus(); box.select(); } }
+$("copyfb").addEventListener("click", function(){ var ft=feedbackText(); copyText(ft, function(ok){ showBox(ft, ok); flash($("fbmsg"), ok ? "Copied. Paste it into the office hours chat." : "Copy blocked. Select the text below and copy it by hand.", 6000); }); });
 var ENDPOINT = "";
-if (ENDPOINT.indexOf("https://")===0) {
-  $("sendfb").hidden = false;
-  var sid = ""; try { sid = localStorage.getItem(KEY+"-sid") || ""; if(!sid){ sid = Math.random().toString(36).slice(2,10); localStorage.setItem(KEY+"-sid", sid); } } catch(e){ sid = "anon"; }
-  $("sendfb").addEventListener("click", function(){
-    var rows=[]; S.forEach(function(s){ var r=state.rate[s.id]||"", v=state.value[s.id]||0; if(r||v) rows.push({id:s.id,name:s.name,tab:s.tab,rating:r,value:v,tags:state.tags[s.id]||[],note:(state.note[s.id]||"").trim()}); });
-    var adds=(state.adds||"").trim();
-    if(!rows.length && !adds){ flash($("fbmsg"), "Rate a starter or add a suggestion first."); return; }
-    var btn=$("sendfb"); btn.disabled=true;
-    fetch(ENDPOINT,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({sid:sid,who:(state.who||"").trim(),ts:new Date().toISOString(),rows:rows,adds:adds})})
-      .then(function(){ flash($("fbmsg"), "Sent "+rows.length+" rating"+(rows.length===1?"":"s")+". You can keep testing and send again."); })
-      .catch(function(){ flash($("fbmsg"), "Could not send. Use Copy my feedback instead."); })
-      .then(function(){ setTimeout(function(){btn.disabled=false;},3000); });
-  });
-  $("sendnote").hidden=false;
-}
+var LIVE = ENDPOINT.indexOf("https://")===0;
+var sid = ""; try { sid = localStorage.getItem(KEY+"-sid") || ""; if(!sid){ sid = Math.random().toString(36).slice(2,10); localStorage.setItem(KEY+"-sid", sid); } } catch(e){ sid = "anon"; }
+$("sendnote").textContent = LIVE
+  ? "Submit adds your ratings, tags and notes, plus the name you type above, to the Ask Starters feedback sheet. Nothing else is collected."
+  : "Submit copies your feedback so you can paste it into the office hours chat.";
+$("submitfb").addEventListener("click", function(){
+  var rows=[]; S.forEach(function(s){ var r=state.rate[s.id]||"", v=state.value[s.id]||0; if(r||v) rows.push({id:s.id,name:s.name,tab:s.tab,rating:r,value:v,tags:state.tags[s.id]||[],note:(state.note[s.id]||"").trim()}); });
+  var adds=(state.adds||"").trim();
+  if(!rows.length && !adds){ flash($("fbmsg"), "Rate a starter or add a suggestion first.", 5000); return; }
+  var btn=$("submitfb"), ft=feedbackText();
+  function viaCopy(why){ copyText(ft, function(ok){ showBox(ft, ok); flash($("fbmsg"), (why||"")+(ok ? "Copied for you. Paste it into the office hours chat to submit." : "Select the text below and paste it into the office hours chat."), 9000); }); }
+  if(!LIVE){ viaCopy(""); return; }
+  btn.disabled=true;
+  fetch(ENDPOINT,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({sid:sid,who:(state.who||"").trim(),ts:new Date().toISOString(),rows:rows,adds:adds})})
+    .then(function(){ flash($("fbmsg"), "Submitted "+rows.length+" rating"+(rows.length===1?"":"s")+(adds?" and your suggestions":"")+". Thank you. You can keep testing and submit again.", 9000); })
+    .catch(function(){ viaCopy("Could not submit, so "); })
+    .then(function(){ setTimeout(function(){btn.disabled=false;},3000); });
+});
 $("dlfb").addEventListener("click", function(){
   var blob=new Blob([feedbackText()],{type:"text/plain"}), a=document.createElement("a");
   a.href=URL.createObjectURL(blob); a.download="ask-starters-feedback.txt"; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(function(){URL.revokeObjectURL(a.href);},500);
