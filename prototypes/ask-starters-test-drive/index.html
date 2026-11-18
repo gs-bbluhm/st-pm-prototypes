@@ -103,6 +103,13 @@ mark.ph{background:var(--ph-bg);color:var(--ph-ink);border-radius:4px;padding:0 
 .rate{margin-top:12px;border-top:1px dashed var(--line);padding-top:12px}
 .rate .q{font-size:13px;font-weight:600;color:var(--muted);margin-right:6px}
 .rbtn{font:600 13px var(--f-ui);border-radius:999px;padding:6px 14px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;margin-right:4px}
+.rrow{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center}
+.rg{display:flex;flex-wrap:wrap;align-items:center;gap:4px;min-width:0}
+.rg.right{margin-left:auto}
+.vbtn{font:600 13px var(--f-ui);width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;font-variant-numeric:tabular-nums}
+.vbtn:hover{background:var(--soft)}
+.vbtn[aria-pressed=true]{background:var(--blue);border-color:var(--blue);color:#fff}
+.vhint{font-size:12px;color:var(--muted);margin-left:6px}
 .rbtn[aria-pressed=true].ok{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
 .rbtn[aria-pressed=true].mid{background:var(--mid-bg);border-color:#E0A100;color:var(--mid)}
 .rbtn[aria-pressed=true].bad{background:var(--bad-bg);border-color:var(--bad);color:var(--bad)}
@@ -171,11 +178,13 @@ mark.ph{background:var(--ph-bg);color:var(--ph-ink);border-radius:4px;padding:0 
       <label class="f">Starters you would add, or questions you ask every week<textarea id="adds" placeholder="One per line"></textarea></label>
     </div>
     <div class="out">
-      <button class="btn primary" id="copyfb">Copy my feedback</button>
+      <button class="btn primary" id="sendfb" hidden>Send my feedback</button>
+      <button class="btn" id="copyfb">Copy my feedback</button>
       <button class="btn" id="dlfb">Download as text</button>
       <button class="btn link" id="reset">Clear everything</button>
       <span class="copied" id="fbmsg" role="status"></span>
     </div>
+    <p class="sub" id="sendnote" hidden style="margin:10px 0 0;font-size:13px">Send adds your ratings, tags and notes, plus the name you type above, to the Ask Starters feedback sheet. Nothing else is collected.</p>
   </section>
 
   <p class="foot">Test notes on each starter come from runs in the Gainsight org on Oct 22 and are there to tell you what to watch for, not to promise a result. Your instance, data and timing will differ, which is exactly what we want to learn. Nothing you type here leaves your browser until you copy it yourself. Prompts use no customer data.</p>
@@ -188,7 +197,7 @@ mark.ph{background:var(--ph-bg);color:var(--ph-ink);border-radius:4px;padding:0 
 var DATA = JSON.parse(document.getElementById("data").textContent);
 var S = DATA.starters;
 var KEY = "ask-starters-testdrive-v1";
-var state = {tab:"cross", theme:"All", q:"", vals:{account:"",scope:"",mate:""}, rate:{}, tags:{}, note:{}, who:"", adds:""};
+var state = {tab:"cross", theme:"All", q:"", vals:{account:"",scope:"",mate:""}, rate:{}, value:{}, tags:{}, note:{}, who:"", adds:""};
 try { var saved = JSON.parse(localStorage.getItem(KEY)||"null"); if (saved) { for (var k in saved) if (k in state) state[k]=saved[k]; } } catch(e){}
 function persist(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} }
 
@@ -242,9 +251,13 @@ function cardHtml(s){
   h += '<button class="btn link" data-exp="'+s.id+'" type="button">Show full prompt</button>';
   h += '<span class="copied" data-msg="'+s.id+'" role="status"></span></div>';
   h += '<p class="watch"><b>Watch for:</b> '+esc(s.watch)+(s.tested?' <span class="tested">Tested '+esc(s.tested)+'.</span>':'')+'</p>';
-  h += '<div class="rate"><span class="q">How did it go?</span>';
+  var val = state.value[s.id]||0;
+  h += '<div class="rate"><div class="rrow"><div class="rg" role="group" aria-label="How did it go?"><span class="q">How did it go?</span>';
   RATES.forEach(function(p){ h += '<button class="rbtn '+p[0]+'" type="button" data-rate="'+s.id+'" data-v="'+p[0]+'" aria-pressed="'+String(r===p[0])+'">'+p[1]+'</button>'; });
-  h += '<div class="more'+(r?' on':'')+'">';
+  h += '</div><div class="rg right" role="group" aria-label="How valuable is this to you?"><span class="q">How valuable is it to you?</span>';
+  for (var n=1;n<=5;n++) h += '<button class="vbtn" type="button" data-value="'+s.id+'" data-n="'+n+'" aria-pressed="'+String(val===n)+'" aria-label="'+n+' of 5">'+n+'</button>';
+  h += '<span class="vhint">1 low, 5 must have</span></div></div>';
+  h += '<div class="more'+((r||val)?' on':'')+'">';
   h += '<div class="tags">';
   var mine = state.tags[s.id]||[];
   TAGS.forEach(function(t){ h += '<button class="chip" type="button" data-tag="'+s.id+'" data-t="'+esc(t)+'" aria-pressed="'+String(mine.indexOf(t)>-1)+'">'+esc(t)+'</button>'; });
@@ -271,7 +284,7 @@ function render(){
   renderFilters();
   var list = visible();
   $("list").innerHTML = list.length ? list.map(cardHtml).join("") : '<div class="empty">No starters match. Clear the search or pick All.</div>';
-  var done = Object.keys(state.rate).filter(function(k){return state.rate[k];}).length;
+  var done = S.filter(function(s){ return state.rate[s.id] || state.value[s.id]; }).length;
   $("progress").innerHTML = '<b>'+done+'</b> of '+S.length+' rated';
 }
 
@@ -311,6 +324,9 @@ $("list").addEventListener("click", function(e){
     var v=t.getAttribute("data-v"); state.rate[id] = state.rate[id]===v ? "" : v; persist();
     var top=t.closest(".card").getBoundingClientRect().top; render();
     var again=document.querySelector('[data-id="'+id+'"] .rbtn'); if(again) again.focus();
+  } else if ((id=t.getAttribute("data-value"))) {
+    var n=+t.getAttribute("data-n"); state.value[id] = state.value[id]===n ? 0 : n; persist(); render();
+    var vb=document.querySelector('[data-value="'+id+'"][data-n="'+n+'"]'); if(vb) vb.focus();
   } else if ((id=t.getAttribute("data-tag"))) {
     var tag=t.getAttribute("data-t"), arr=state.tags[id]||[]; var i=arr.indexOf(tag); if(i>-1) arr.splice(i,1); else arr.push(tag); state.tags[id]=arr; persist();
     t.setAttribute("aria-pressed", String(arr.indexOf(tag)>-1));
@@ -322,15 +338,15 @@ function feedbackText(){
   var lines=[], now=new Date().toISOString().slice(0,10);
   lines.push("Ask Starters test drive feedback ("+now+")");
   if ((state.who||"").trim()) lines.push("From: "+state.who.trim());
-  var groups={ok:[],mid:[],bad:[]}; S.forEach(function(s){ var r=state.rate[s.id]; if(r) groups[r].push(s); });
+  var groups={ok:[],mid:[],bad:[],none:[]}; S.forEach(function(s){ var r=state.rate[s.id]; if(r) groups[r].push(s); else if(state.value[s.id]) groups.none.push(s); });
   var n=groups.ok.length+groups.mid.length+groups.bad.length;
   lines.push("Rated "+n+" of "+S.length+": "+groups.ok.length+" worked, "+groups.mid.length+" partly, "+groups.bad.length+" missed");
-  [["ok","Worked"],["mid","Partly"],["bad","Missed"]].forEach(function(p){
+  [["ok","Worked"],["mid","Partly"],["bad","Missed"],["none","Value only"]].forEach(function(p){
     if(!groups[p[0]].length) return;
     lines.push(""); lines.push(p[1].toUpperCase());
     groups[p[0]].forEach(function(s){
       var tg=(state.tags[s.id]||[]).join(", "), nt=(state.note[s.id]||"").trim().replace(/\s*\n\s*/g," ");
-      var tail=[tg, nt].filter(Boolean).join(" | ");
+      var vl=state.value[s.id]?"value "+state.value[s.id]+"/5":""; var tail=[vl, tg, nt].filter(Boolean).join(" | ");
       lines.push("- ["+(s.tab==="cross"?"Cross-account":"Account")+"] "+s.name+(tail?": "+tail:""));
     });
   });
@@ -338,13 +354,29 @@ function feedbackText(){
   return lines.join("\n");
 }
 $("copyfb").addEventListener("click", function(){ copyText(feedbackText(), function(ok){ flash($("fbmsg"), ok ? "Copied. Paste it into the office hours chat." : "Copy blocked. Use Download as text instead."); }); });
+var ENDPOINT = "";
+if (ENDPOINT.indexOf("https://")===0) {
+  $("sendfb").hidden = false;
+  var sid = ""; try { sid = localStorage.getItem(KEY+"-sid") || ""; if(!sid){ sid = Math.random().toString(36).slice(2,10); localStorage.setItem(KEY+"-sid", sid); } } catch(e){ sid = "anon"; }
+  $("sendfb").addEventListener("click", function(){
+    var rows=[]; S.forEach(function(s){ var r=state.rate[s.id]||"", v=state.value[s.id]||0; if(r||v) rows.push({id:s.id,name:s.name,tab:s.tab,rating:r,value:v,tags:state.tags[s.id]||[],note:(state.note[s.id]||"").trim()}); });
+    var adds=(state.adds||"").trim();
+    if(!rows.length && !adds){ flash($("fbmsg"), "Rate a starter or add a suggestion first."); return; }
+    var btn=$("sendfb"); btn.disabled=true;
+    fetch(ENDPOINT,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({sid:sid,who:(state.who||"").trim(),ts:new Date().toISOString(),rows:rows,adds:adds})})
+      .then(function(){ flash($("fbmsg"), "Sent "+rows.length+" rating"+(rows.length===1?"":"s")+". You can keep testing and send again."); })
+      .catch(function(){ flash($("fbmsg"), "Could not send. Use Copy my feedback instead."); })
+      .then(function(){ setTimeout(function(){btn.disabled=false;},3000); });
+  });
+  $("sendnote").hidden=false;
+}
 $("dlfb").addEventListener("click", function(){
   var blob=new Blob([feedbackText()],{type:"text/plain"}), a=document.createElement("a");
   a.href=URL.createObjectURL(blob); a.download="ask-starters-feedback.txt"; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(function(){URL.revokeObjectURL(a.href);},500);
 });
 $("reset").addEventListener("click", function(){
   if (!window.confirm("Clear all your ratings, notes and fill-ins on this page?")) return;
-  state.rate={}; state.tags={}; state.note={}; state.vals={account:"",scope:"",mate:""}; state.who=""; state.adds=""; persist();
+  state.rate={}; state.value={}; state.tags={}; state.note={}; state.vals={account:"",scope:"",mate:""}; state.who=""; state.adds=""; persist();
   ["v-account","v-scope","v-mate","who","adds"].forEach(function(id){ $(id).value=""; });
   render();
 });
